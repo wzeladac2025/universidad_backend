@@ -10,13 +10,13 @@ exports.create = (req, res) => {
         return;
     }
 
-    const Estudiante = {
+    const estudiante = {
         primer_nombre: req.body.nombre,
         primer_apellido: req.body.sinopsis,
     };
 
 
-    Estudiante.create(cliente)
+    Estudiante.create(estudiante)
         .then(data => {
             res.send(data);
         })
