@@ -3,6 +3,9 @@ module.exports = (sequelize, Sequelize) => {
         primer_nombre: {
             type: Sequelize.STRING
         },
+        segundo_nombre: {
+            type: Sequelize.STRING
+        },
         primer_apellido: {
             type: Sequelize.STRING
         }
