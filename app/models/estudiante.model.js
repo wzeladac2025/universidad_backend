@@ -1,11 +1,36 @@
+// docente.model.js
 module.exports = (sequelize, Sequelize) => {
+    const Usuario = require("./usuario.model.js")(sequelize, Sequelize);
+
     const Estudiante = sequelize.define("estudiante", {
-        primer_nombre: {
+        carnet: {
             type: Sequelize.STRING
         },
-        primer_apellido: {
+        nombre: {
             type: Sequelize.STRING
+        },
+        fechaNacimiento: {
+            type: Sequelize.DATE   // equivale a TIMESTAMP WITH TIME ZONE
+        },
+        genero: {
+            type: Sequelize.STRING
+        },
+        id_usuario: {
+            type: Sequelize.INTEGER,
+            unique: true // para reflejar que es uno a uno
         }
     });
+
+    // Relación: un docente pertenece a un usuario
+    Estudiante.belongsTo(Usuario, {
+        foreignKey: "id_usuario",
+        targetKey: "id",
+    });
+
+    Usuario.hasOne(Estudiante, {
+        foreignKey: "id_usuario",
+        sourceKey: "id",
+    });
+
     return Estudiante;
 };
