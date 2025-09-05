@@ -1,4 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
+    const Usuario = require("./usuario.model")(sequelize, Sequelize);
     const Estudiante = sequelize.define("estudiante", {
         primer_nombre: {
             type: Sequelize.STRING
@@ -10,5 +11,16 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING
         }
     });
+
+        Estudiante.belongsTo(Usuario, {
+        foreignKey: "id_usuario",
+        targetKey: "id",
+    });
+
+    Usuario.hasOne(Estudiante, {
+        foreignKey: "id_usuario",
+        sourceKey: "id",
+    });
+
     return Estudiante;
 };
