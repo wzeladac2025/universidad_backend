@@ -1,12 +1,13 @@
-// Importamos el modulo express 
+// Importamos el modulo express
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const swaggerUI = require("swagger-ui-express");
 
 const app = express();
 
 var corsOptions = {
-  origin: "http://localhost:8081"
+  origin: "http://localhost:8081",
 };
 
 app.use(cors(corsOptions));
@@ -15,9 +16,24 @@ app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Serve Swagger documentation
+const swaggerSpec = require("./app/config/swagger.config");
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+
 const db = require("./app/models");
 db.sequelize.sync();
 
+/**
+ * @swagger
+ * /:
+ *   get:
+ *     summary: Test
+ *     tags: [Servicios Up]
+ *     description: Test Proyecto Levantado
+ *     responses:
+ *       200:
+ *         description: Test Proyecto Levantado
+ */
 app.get("/", (req, res) => {
   res.json({ message: "API Proyecto Universidad" });
 });
