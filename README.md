@@ -15,3 +15,6 @@ https://swagger.io/docs/specification/v2_0/what-is-swagger/
 
 # DOCUMENTACION SEQUELIZE
 https://sequelize.org/docs/v6/core-concepts/model-querying-basics/
+
+# DESCARGAR CAMBIOS DE LA RAMA PRINCIPAL GIT
+git pull origin main
