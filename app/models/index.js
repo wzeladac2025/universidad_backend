@@ -22,5 +22,18 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 db.estudiante = require("./estudiante.model.js")(sequelize, Sequelize);
+db.boleta = require("./boleta.model.js")(sequelize, Sequelize);
+db.factura = require("./factura.model.js")(sequelize, Sequelize);
+
+//Definir relaciones entre modelos
+db.estudiante.hasMany(db.boleta, {
+  foreignKey: "id_estudiante",
+  as: "boletas"
+});
+
+db.boleta.belongsTo(db.estudiante, {
+  foreignKey: "id_estudiante",
+  as: "estudiante"
+});
 
 module.exports = db;

@@ -23,6 +23,9 @@ app.get("/", (req, res) => {
 });
 
 require("./app/routes/estudiante.route")(app);
+require("./app/routes/boleta.route")(app);
+require("./app/routes/factura.route")(app);
+
 const PORT = process.env.PORT || 8081;
 app.listen(PORT, () => {
   console.log(`Servidor levantado en puerto ${PORT}.`);
