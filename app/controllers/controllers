@@ -1,0 +1,47 @@
+const db = require('../models');
+const Requisito = db.requisito;
+const Aprobacion = db.aprobacion;
+
+exports.validarRequisitos = async (req, res) => {
+  const { estudianteId, materiaId } = req.params;
+
+  try {
+    // Obtener los requisitos de la materia
+    const requisitos = await Requisito.findAll({
+      where: { materia_id: materiaId },
+      attributes: ['requisito_id']
+    });
+
+    // Obtener las materias aprobadas por el estudiante
+    const aprobadas = await Aprobacion.findAll({
+      where: { estudiante_id: estudianteId },
+      attributes: ['materia_id']
+    });
+
+    const aprobadasIds = aprobadas.map(a => a.materia_id);
+    const requisitosIds = requisitos.map(r => r.requisito_id);
+
+    // Filtrar los requisitos que no están en las aprobaciones
+    const faltantes = requisitosIds.filter(id => !aprobadasIds.includes(id));
+
+    // Respuesta según cumplimiento
+    if (faltantes.length === 0) {
+      return res.status(200).json({
+        cumple: true,
+        mensaje: 'Cumple todos los requisitos.'
+      });
+    }
+
+    return res.status(200).json({
+      cumple: false,
+      faltantes
+    });
+
+  } catch (error) {
+    console.error('Error en validación:', error);
+    res.status(500).json({
+      error: 'Error al validar requisitos.',
+      detalle: error.message
+    });
+  }
+};

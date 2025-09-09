@@ -4,7 +4,7 @@ module.exports = {
   PASSWORD: "rootadmin",
   DB: "XEPDB1",
   dialect: "oracle",
-  port: 1521,
+  port: 1525,
   pool: {
     max: 5,
     min: 0,
