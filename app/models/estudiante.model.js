@@ -16,8 +16,7 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING
         },
         id_usuario: {
-            type: Sequelize.INTEGER,
-            unique: true // para reflejar que es uno a uno
+            type: Sequelize.INTEGER
         }
     });
 
