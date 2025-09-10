@@ -49,7 +49,10 @@ try {
   console.error("❌ Error al cargar estudiante.routes.js:", err.message);
 }
 
+require("./app/routes/boleta.route")(app);
+require("./app/routes/factura.route")(app);
+
 const PORT = process.env.PORT || 8081;
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor iniciado correctamente en el puerto ${PORT}.`);
+  console.log(`Servidor levantado en puerto ${PORT}.`);
 });
