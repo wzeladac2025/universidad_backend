@@ -1,11 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-<<<<<<< HEAD
 require("dotenv").config();
-=======
 const swaggerUI = require("swagger-ui-express");
->>>>>>> 55388ac228649b675404ad62b213a11c20378191
 
 const app = express();
 
@@ -52,23 +49,6 @@ try{
   console.error("❌ Error al cargar docente.routes.js:", err.message);
 }
 
-<<<<<<< HEAD
-=======
-try {
-  require("./app/routes/usuario.routes.js")(app);
-  console.log("✅ usuario.routes.js cargado correctamente");
-} catch (err) {
-  console.error("❌ Error al cargar usuario.routes.js:", err.message);
-}
-
-try {
-  require("./app/routes/estudiante.routes.js")(app);
-  console.log("✅ estudiante.routes.js cargado correctamente");
-} catch (err) {
-  console.error("❌ Error al cargar estudiante.routes.js:", err.message);
-}
-
->>>>>>> 55388ac228649b675404ad62b213a11c20378191
 const PORT = process.env.PORT || 8081;
 app.listen(PORT, () => {
   console.log(`🚀 Servidor iniciado correctamente en el puerto ${PORT}.`);
