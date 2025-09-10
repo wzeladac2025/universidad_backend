@@ -5,7 +5,6 @@ const Op = db.Sequelize.Op;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-
 // Create and Save a new Client
 exports.create = async (req, res) => {
     try{

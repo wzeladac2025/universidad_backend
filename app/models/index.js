@@ -41,7 +41,7 @@ db.usuarios = require("./usuario.model.js")(sequelize, Sequelize);
 }
 
 try {
-db.docentes = require("./estudiante.model.js")(sequelize, Sequelize);
+db.estudiante = require("./estudiante.model.js")(sequelize, Sequelize);
   console.log("✅ Modelo 'estudiante' cargado correctamente.");
 } catch (err) {
   console.error("❌ Error al cargar modelo 'estudiante':", err.message);

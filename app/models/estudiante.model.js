@@ -1,14 +1,26 @@
 module.exports = (sequelize, Sequelize) => {
     const Usuario = require("./usuario.model")(sequelize, Sequelize);
     const Estudiante = sequelize.define("estudiante", {
-        primer_nombre: {
+        carnet: {
             type: Sequelize.STRING
         },
-        segundo_nombre: {
+        DPI: {
+            type: Sequelize.INTEGER
+        },
+        nombre: {
             type: Sequelize.STRING
         },
-        primer_apellido: {
+        apellido: {
             type: Sequelize.STRING
+        },
+        fechaNacimiento: {
+            type: Sequelize.DATE   // equivale a TIMESTAMP WITH TIME ZONE
+        },
+        genero: {
+            type: Sequelize.BOOLEAN
+        },
+        id_usuario: {
+            type: Sequelize.INTEGER
         }
     });
 
