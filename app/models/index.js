@@ -22,5 +22,6 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 db.estudiante = require("./estudiante.model.js")(sequelize, Sequelize);
+db.notificacionpago = require("./notificacion_pago.model.js")(sequelize, Sequelize);
 
 module.exports = db;
