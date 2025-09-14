@@ -76,25 +76,6 @@ exports.getById = (req, res) => {
     });
 };
 
-// Buscar boletas por referencia
-exports.getByReferencia = (req, res) => {
-  const referencia = req.params.referencia;
-
-  Boleta.findAll({
-    where: {
-      referencia: {
-        [Op.like]: `%${referencia}%`
-      }
-    }
-  })
-    .then(data => res.send(data))
-    .catch(err => {
-      res.status(500).send({
-        message: "Error al buscar boleta por referencia."
-      });
-    });
-};
-
 // Actualizar boleta por ID
 exports.update = (req, res) => {
   const id = req.params.id;
