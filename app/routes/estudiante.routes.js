@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 module.exports = app => {
     const estudiante = require("../controllers/estudiante.controller.js");
     var router = require("express").Router();
@@ -14,7 +14,7 @@ module.exports = app => {
     router.delete("/delete/:id", estudiante.delete);
     app.use("/api/estudiante", router);
 };
-=======
+
 module.exports = (app) => {
   const estudiante = require("../controllers/estudiante.controller.js");
   var router = require("express").Router();
@@ -130,4 +130,3 @@ module.exports = (app) => {
   router.delete("/delete/:id", estudiante.delete);
   app.use("/api/estudiante", router);
 };
->>>>>>> 55388ac228649b675404ad62b213a11c20378191
