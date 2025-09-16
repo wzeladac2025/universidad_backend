@@ -10,7 +10,8 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING
         },
         duracion: {
-            type: Sequelize.DATE   // equivale a TIMESTAMP WITH TIME ZONE
+            type: Sequelize.INTEGER,   // equivale a TIMESTAMP WITH TIME ZONE
+            field: "DURACION"
         }
     });
 
@@ -25,5 +26,5 @@ module.exports = (sequelize, Sequelize) => {
         sourceKey: "id",
     });
 
-    return Docente;
+    return Carrera;
 };

@@ -4,7 +4,32 @@ module.exports = app => {
 
     const usuario = require("../controllers/usuario.controller.js");
     var router = require("express").Router();
-    // Create a new Client
+   //Nuevo Usuario
+   /**
+   * @swagger
+   * /api/usuario/register/:
+   *   post:
+   *     summary: Crear usuario
+   *     tags: [Usuario]
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *                correo:
+   *                  type: string
+   *                contrasena:
+   *                  type: string
+   *                role:
+   *                  type: string
+   *     responses:
+   *       200:
+   *         description: Usuario creado
+   *       400:
+   *         description: Error al crear Usuario
+   */
     router.post("/register/", usuario.create);
     // Retrieve all Client
     router.get("/", soloadmin, usuario.findAll);

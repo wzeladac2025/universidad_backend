@@ -39,18 +39,38 @@ exports.getAll = (req, res) => {
     });
 };
 
-exports.getById = (req, res) => {
-  const idEstudiante = req.params.id;
+exports.getByCarnet = async (req, res) => {
 
-  Estudiante.findAll({ where: { id: idEstudiante } })
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Error ocurrido al obtener estudiante.",
-      });
-    });
+    const carnet = req.params.carnet;
+
+    if (!carnet) {
+        console.warn("No se proporcionó carnet en la consulta");
+        return res.status(400).send({
+            message: "Debe proporcionar un carnet para la búsqueda."
+        });
+    }
+
+    // Para Oracle: búsqueda insensible a mayúsculas
+    var condition = sequelize.where(
+        sequelize.fn("UPPER", sequelize.col("carnet")),
+        { [Op.like]: `%${carnet.toUpperCase()}%` }
+    );
+
+    Estudiante.findOne({ where: condition })
+        .then(data => {
+            if (data) {
+                res.send(data);
+            } else {
+                res.status(404).send({
+                    message: "Estudiante no encontrado con carnet " + carnet
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Error ocurrido al obtener estudiante."
+            });
+        });
 };
 
 exports.update = (req, res) => {

@@ -46,8 +46,8 @@ try {
 
 try {
   db.carreras = require("./carrera.model.js")(sequelize, Sequelize);
-  console.log("✅ Modelo 'carrera' cargado correctamente.");
+  console.log("✅ Modelo 'carrera' cargado correctamente. \n");
 } catch (err) {
-  console.error("❌ Error al cargar modelo 'carrera':", err.message);
+  console.error("❌ Error al cargar modelo 'carrera':", err.message, "\n");
 }
 module.exports = db;

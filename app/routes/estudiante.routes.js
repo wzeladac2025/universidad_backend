@@ -61,7 +61,7 @@ module.exports = (app) => {
    *         description: Estudiante encontrado
    */
   //Obtener por id estudiante
-  router.get("/:id", estudiante.getById);
+  router.get("/:carnet", estudiante.getByCarnet);
 
   //Actualizar estudiante
     /**
