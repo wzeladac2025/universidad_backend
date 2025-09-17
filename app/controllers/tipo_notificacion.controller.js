@@ -1,5 +1,5 @@
 const db = require("../models");
-const Notificacion = db.notificacion;  // 👈 Nombre del modelo definido en Sequelize
+const TipoNotificacion = db.tipo_notificacion;  // 👈 mismo nombre que el modelo
 const Op = db.Sequelize.Op;
 
 // Crear una nueva notificación
@@ -9,9 +9,9 @@ exports.create = (req, res) => {
     }
 
     const nuevaNotificacion = {
-        id_curso: req.body.id_curso,
+        //id_curso: req.body.id_curso,
         id_estudiante: req.body.id_estudiante,
-        id_tarea: req.body.id_tarea || null,
+        //id_tarea: req.body.id_tarea || null,
         tipo_notificacion: req.body.tipo_notificacion,
         titulo: req.body.titulo,
         mensaje: req.body.mensaje,
@@ -21,7 +21,7 @@ exports.create = (req, res) => {
         prioridad: req.body.prioridad || "media"
     };
 
-    Notificacion.create(nuevaNotificacion)
+    TipoNotificacion.create(nuevaNotificacion)
         .then(data => res.send(data))
         .catch(err => {
             res.status(500).send({ message: err.message || "Error al crear la notificación." });
@@ -32,7 +32,7 @@ exports.create = (req, res) => {
 exports.findOne = (req, res) => {
     const id_notificacion = req.params.id_notificacion;
 
-    Notificacion.findByPk(id_notificacion)
+    TipoNotificacion.findByPk(id_notificacion)
         .then(data => {
             if (data) res.send(data);
             else res.status(404).send({ message: "Notificación no encontrada." });
@@ -46,7 +46,7 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
     const id_notificacion = req.params.id_notificacion;
 
-    Notificacion.update(req.body, { where: { id_notificacion: id_notificacion } })
+    TipoNotificacion.update(req.body, { where: { id_notificacion: id_notificacion } })
         .then(num => {
             if (num == 1) {
                 res.send({ message: "Notificación actualizada correctamente." });
@@ -63,7 +63,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id_notificacion = req.params.id_notificacion;
 
-    Notificacion.destroy({ where: { id_notificacion: id_notificacion } })
+    TipoNotificacion.destroy({ where: { id_notificacion: id_notificacion } })
         .then(num => {
             if (num == 1) {
                 res.send({ message: "Notificación eliminada correctamente." });
@@ -78,7 +78,7 @@ exports.delete = (req, res) => {
 
 // Eliminar todas las notificaciones
 exports.deleteAll = (req, res) => {
-    Notificacion.destroy({ where: {}, truncate: false })
+    TipoNotificacion.destroy({ where: {}, truncate: false })
         .then(nums => {
             res.send({ message: `${nums} notificaciones eliminadas correctamente.` });
         })
@@ -87,11 +87,11 @@ exports.deleteAll = (req, res) => {
         });
 };
 
-// Encontrar todas las notificaciones por estado (ej. enviadas)
+// Encontrar todas las notificaciones por estado (?estado=pendiente|enviada|leída)
 exports.findAllByEstado = (req, res) => {
     const estado = req.query.estado || "pendiente";
 
-    Notificacion.findAll({ where: { estado_notificacion: estado } })
+    TipoNotificacion.findAll({ where: { estado_notificacion: estado } })
         .then(data => res.send(data))
         .catch(err => {
             res.status(500).send({ message: err.message || "Error al obtener notificaciones filtradas por estado." });

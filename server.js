@@ -24,6 +24,7 @@ app.get("/", (req, res) => {
 
 require("./app/routes/estudiante.route")(app);
 require("./app/routes/notificacion_pago.route")(app);
+require("./app/routes/tipo_notificacion.route")(app);
 const PORT = process.env.PORT || 8081;
 app.listen(PORT, () => {
   console.log(`Servidor levantado en puerto ${PORT}.`);
