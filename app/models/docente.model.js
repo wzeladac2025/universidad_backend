@@ -1,14 +1,13 @@
 // docente.model.js
 module.exports = (sequelize, Sequelize) => {
-    const Usuario = require("./usuario.model.js")(sequelize, Sequelize);
+    const Usuario = require("./usuario.model")(sequelize, Sequelize);
 
-    const Estudiante = sequelize.define("estudiante", {
-        carnet: {
+    const Docente = sequelize.define("docente", {
+        DPI: {
             type: Sequelize.STRING
         },
-<<<<<<< HEAD
-        DPI: {
-            type: Sequelize.INTEGER
+        carnet: {
+            type: Sequelize.STRING
         },
         nombre: {
             type: Sequelize.STRING
@@ -22,32 +21,33 @@ module.exports = (sequelize, Sequelize) => {
         genero: {
             type: Sequelize.BOOLEAN
         },
-=======
-        nombre: {
-            type: Sequelize.STRING
+        sueldo: {
+            type: Sequelize.DECIMAL(9,2) // NUMERIC(9,2)
         },
-        fechaNacimiento: {
-            type: Sequelize.DATE   // equivale a TIMESTAMP WITH TIME ZONE
-        },
-        genero: {
-            type: Sequelize.STRING
-        },
->>>>>>> main
         id_usuario: {
             type: Sequelize.INTEGER
+        },
+        id_carrera: {
+            type: Sequelize.INTEGER
+        },
+        status_carrera: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: false
+            // true: carrera asignada
+            // false: sin asignar carrera
         }
+
+        
     });
 
-    // Relación: un docente pertenece a un usuario
-    Estudiante.belongsTo(Usuario, {
+    Docente.belongsTo(Usuario, {
         foreignKey: "id_usuario",
         targetKey: "id",
     });
 
-    Usuario.hasOne(Estudiante, {
+    Usuario.hasOne(Docente, {
         foreignKey: "id_usuario",
         sourceKey: "id",
     });
-
-    return Estudiante;
+    return Docente;
 };

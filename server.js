@@ -1,49 +1,55 @@
-// Importamos el modulo express 
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 require("dotenv").config();
+const swaggerUI = require("swagger-ui-express");
 
 const app = express();
 
 var corsOptions = {
-  origin: "http://localhost:8081"
+  origin: "http://localhost:8081",
 };
 
 app.use(cors(corsOptions));
-
-// parse requests of content-type - application/json
 app.use(bodyParser.json());
-
-// parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Serve Swagger documentation
+const swaggerSpec = require("./app/config/swagger.config");
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 const db = require("./app/models");
 db.sequelize.sync();
-// // drop the table if it already exists
-// db.sequelize.sync({ force: true }).then(() => {
-//   console.log("Drop and re-sync db.");
-// });
 
-// simple route
+/**
+ * @swagger
+ * /: 
+ *   get:
+ *     summary: Test
+ *     tags: [Servicios Up]
+ *     description: Test Proyecto Levantado
+ *     responses:
+ *       200:
+ *         description: Test Proyecto Levantado
+ */
 app.get("/", (req, res) => {
   res.json({ message: "UMG Web Universidad" });
 });
-
-try {
-  require("./app/routes/usuario.routes.js")(app);
+try{
+  require("./app/routes/usuario.routes")(app);
   console.log("✅ usuario.routes.js cargado correctamente");
-} catch (err) {
+}catch(err){
   console.error("❌ Error al cargar usuario.routes.js:", err.message);
 }
 
-try {
-  require("./app/routes/estudiante.routes.js")(app);
+try{
+  require("./app/routes/estudiante.routes")(app);
   console.log("✅ estudiante.routes.js cargado correctamente");
-} catch (err) {
+}catch(err){
   console.error("❌ Error al cargar estudiante.routes.js:", err.message);
 }
 
+<<<<<<< HEAD
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8081;
@@ -51,3 +57,22 @@ app.listen(PORT, () => {
     console.log(`🚀 Servidor iniciado correctamente en el puerto ${PORT}.`);
     
 }); 
+=======
+try{
+  require("./app/routes/docente.routes")(app);
+  console.log("✅ docente.routes.js cargado correctamente");
+}catch(err){
+  console.error("❌ Error al cargar docente.routes.js:", err.message);
+}
+try{
+  require("./app/routes/carrera.routes")(app);
+  console.log("✅ carrera.routes.js cargado correctamente\n");
+}catch(err){
+  console.error("❌ Error al cargar carrera.routes.js:", err.message, "\n");
+}
+
+const PORT = process.env.PORT || 8081;
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor iniciado correctamente en el puerto ${PORT}.`);
+});
+>>>>>>> main
