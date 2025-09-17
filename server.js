@@ -27,12 +27,12 @@ app.get("/", (req, res) => {
 });
 
 // 🔗 Registro de rutas
-require("./app/routes/estudiante.route")(app);       // Rutas de estudiantes
-require("./app/routes/materia.route")(app);          // Rutas de materias
-require("./app/routes/aprobacion.route")(app);       // Rutas de aprobaciones
-require("./app/routes/requisito.route")(app);        // Rutas de requisitos
-require("./app/routes/validacion.route")(app);       // ✅ Ruta para validar requisitos académicos
-require("./app/routes/inscripcioncurso.route")(app);
+require("./app/routes/estudiante.route")(app);           // Rutas de estudiantes
+require("./app/routes/materia.route")(app);              // Rutas de materias
+require("./app/routes/aprobacion.route")(app);           // Rutas de aprobaciones
+require("./app/routes/requisito.route")(app);            // Rutas de requisitos
+require("./app/routes/validacion.route")(app);           // Ruta para validar requisitos académicos
+require("./app/routes/inscripcioncurso.route")(app);     // Rutas de inscripción a cursos
 
 // Puerto de escucha
 const PORT = process.env.PORT || 8881;
