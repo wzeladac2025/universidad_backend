@@ -16,12 +16,18 @@ module.exports = (app) => {
    *           schema:
    *             type: object
    *             properties:
-   *                primer_nombre:
+   *                DIP:
+   *                  type: int
+   *                nombre:
    *                  type: string
-   *                segundo_nombre:
+   *                apellido:
    *                  type: string
-   *                primer_apellido:
-   *                  type: string
+   *                fechaNacimiento:
+   *                  type: date
+   *                genero:
+   *                  type: char(1)
+   *                id_usuario:
+   *                  type: int
    *     responses:
    *       200:
    *         description: Estudiante creado
@@ -66,15 +72,15 @@ module.exports = (app) => {
   //Actualizar estudiante
     /**
    * @swagger
-   * /api/estudiante/update/{id}:
+   * /api/estudiante/update/{carnet}:
    *   put:
-   *     summary: Actualizar estudiante por id
+   *     summary: Actualizar estudiante por carnet
    *     tags: [Estudiante]
    *     parameters:
    *        - in: path
-   *          name: id
+   *          name: carnet
    *          type: string
-   *     description: Obtener estudiante por id
+   *     description: Obtener estudiante por carnet
    *     requestBody:
    *       required: true
    *       content:
@@ -82,30 +88,36 @@ module.exports = (app) => {
    *           schema:
    *             type: object
    *             properties:
-   *                primer_nombre:
+   *                DIP:
+   *                  type: int
+   *                nombre:
    *                  type: string
-   *                segundo_nombre:
+   *                apellido:
    *                  type: string
-   *                primer_apellido:
-   *                  type: string
+   *                fechaNacimiento:
+   *                  type: date
+   *                genero:
+   *                  type: char(1)
+   *                id_usuario:
+   *                  type: int
    *     responses:
    *       200:
    *         description: Estudiante actualizado
    */  
-  router.put("/update/:id", estudiante.update);
+  router.put("/update/:carnet", estudiante.update);
 
   //Eliminar estudiante
     /**
    * @swagger
-   * /api/estudiante/delete/{id}:
+   * /api/estudiante/delete/{carnet}:
    *   delete:
-   *     summary: Eliminar estudiante por id
+   *     summary: Eliminar estudiante por carnet
    *     tags: [Estudiante]
    *     parameters:
    *        - in: path
-   *          name: id
+   *          name: carnet
    *          type: string
-   *     description: Obtener estudiante por id
+   *     description: Obtener estudiante por carnet
    *     responses:
    *       200:
    *         description: Estudiante encontrado

@@ -49,15 +49,6 @@ try{
   console.error("❌ Error al cargar estudiante.routes.js:", err.message);
 }
 
-<<<<<<< HEAD
-
-// set port, listen for requests
-const PORT = process.env.PORT || 8081;
-app.listen(PORT, () => {
-    console.log(`🚀 Servidor iniciado correctamente en el puerto ${PORT}.`);
-    
-}); 
-=======
 try{
   require("./app/routes/docente.routes")(app);
   console.log("✅ docente.routes.js cargado correctamente");
@@ -75,4 +66,3 @@ const PORT = process.env.PORT || 8081;
 app.listen(PORT, () => {
   console.log(`🚀 Servidor iniciado correctamente en el puerto ${PORT}.`);
 });
->>>>>>> main

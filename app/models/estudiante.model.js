@@ -6,7 +6,6 @@ module.exports = (sequelize, Sequelize) => {
         carnet: {
             type: Sequelize.STRING
         },
-<<<<<<< HEAD
         DPI: {
             type: Sequelize.INTEGER
         },
@@ -22,17 +21,6 @@ module.exports = (sequelize, Sequelize) => {
         genero: {
             type: Sequelize.BOOLEAN
         },
-=======
-        nombre: {
-            type: Sequelize.STRING
-        },
-        fechaNacimiento: {
-            type: Sequelize.DATE   // equivale a TIMESTAMP WITH TIME ZONE
-        },
-        genero: {
-            type: Sequelize.STRING
-        },
->>>>>>> main
         id_usuario: {
             type: Sequelize.INTEGER
         }
