@@ -50,18 +50,18 @@ module.exports = (app) => {
    */
   router.get("/", estudiante.getAll);
 
-    //Obtener estudiante por id
+    //Obtener estudiante por carnet
     /**
    * @swagger
-   * /api/estudiante/{id}:
+   * /api/estudiante/{carnet}:
    *   get:
-   *     summary: Obtener estudiante por id
+   *     summary: Obtener estudiante por carnet
    *     tags: [Estudiante]
    *     parameters:
    *        - in: path
-   *          name: id
+   *          name: carnet
    *          type: string
-   *     description: Obtener estudiante por id
+   *     description: Obtener estudiante por carnet
    *     responses:
    *       200:
    *         description: Estudiante encontrado
