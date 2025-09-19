@@ -15,6 +15,7 @@ exports.create = async (req, res) => {
         let docente = await Docente.create({
             DPI: req.body.DPI,
             nombre: req.body.nombre,
+            apellido: req.body.apellido,
             fechaNacimiento: req.body.fechaNacimiento,
             genero: req.body.genero,
             sueldo: req.body.sueldo,

@@ -46,8 +46,22 @@ try {
 
 try {
   db.carreras = require("./carrera.model.js")(sequelize, Sequelize);
-  console.log("✅ Modelo 'carrera' cargado correctamente. \n");
+  console.log("✅ Modelo 'carrera' cargado correctamente. ");
 } catch (err) {
-  console.error("❌ Error al cargar modelo 'carrera':", err.message, "\n");
+  console.error("❌ Error al cargar modelo 'carrera':", err.message);
+}
+
+try {
+  db.materias = require("./materia.model.js")(sequelize, Sequelize);
+  console.log("✅ Modelo 'materia' cargado correctamente. ");
+} catch (err) {
+  console.error("❌ Error al cargar modelo 'materia':", err.message);
+}
+
+try {
+  db.cursos = require("./curso.model.js")(sequelize, Sequelize);
+  console.log("✅ Modelo 'curso' cargado correctamente. \n");
+} catch (err) {
+  console.error("❌ Error al cargar modelo 'curso':", err.message, "\n");
 }
 module.exports = db;
