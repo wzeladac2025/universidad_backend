@@ -1,6 +1,6 @@
 // importamos db los modelos en este caso si tenemos uno o mas, se puede referenciar db."nombreModelo".   
 const db = require("../models");
-const Carrera = db.carreras;
+const Carrera = db.carrera;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new Client

@@ -1,6 +1,6 @@
 // importamos db los modelos en este caso si tenemos uno o mas, se puede referenciar db."nombreModelo".   
 const db = require("../models");
-const Docente = db.docentes;  // usamos el modelo docente
+const Docente = db.docente;  // usamos el modelo docente
 const Op = db.Sequelize.Op;
 const Carrera = db.carreras;
 

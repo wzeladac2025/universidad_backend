@@ -50,8 +50,8 @@ module.exports = (app) => {
    */
   router.get("/", estudiante.getAll);
 
-    //Obtener estudiante por carnet
-    /**
+  //Obtener estudiante por carnet
+  /**
    * @swagger
    * /api/estudiante/{carnet}:
    *   get:
@@ -70,7 +70,7 @@ module.exports = (app) => {
   router.get("/:carnet", estudiante.getByCarnet);
 
   //Actualizar estudiante
-    /**
+  /**
    * @swagger
    * /api/estudiante/update/{carnet}:
    *   put:
@@ -103,11 +103,11 @@ module.exports = (app) => {
    *     responses:
    *       200:
    *         description: Estudiante actualizado
-   */  
+   */
   router.put("/update/:carnet", estudiante.update);
 
   //Eliminar estudiante
-    /**
+  /**
    * @swagger
    * /api/estudiante/delete/{carnet}:
    *   delete:
@@ -121,7 +121,8 @@ module.exports = (app) => {
    *     responses:
    *       200:
    *         description: Estudiante encontrado
-   */  
+   */
   router.delete("/delete/:id", estudiante.delete);
+
   app.use("/api/estudiante", router);
 };

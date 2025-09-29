@@ -35,6 +35,7 @@ db.sequelize.sync();
 app.get("/", (req, res) => {
   res.json({ message: "UMG Web Universidad" });
 });
+
 try{
   require("./app/routes/usuario.routes")(app);
   console.log("✅ usuario.routes.js cargado correctamente");

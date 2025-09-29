@@ -1,41 +1,58 @@
-// docente.model.js
 module.exports = (sequelize, Sequelize) => {
-    const Usuario = require("./usuario.model.js")(sequelize, Sequelize);
+  const Usuario = require("./usuario.model")(sequelize, Sequelize);
 
-    const Estudiante = sequelize.define("estudiante", {
-        carnet: {
-            type: Sequelize.STRING
-        },
-        DPI: {
-            type: Sequelize.INTEGER
-        },
-        nombre: {
-            type: Sequelize.STRING
-        },
-        apellido: {
-            type: Sequelize.STRING
-        },
-        fechaNacimiento: {
-            type: Sequelize.DATE   // equivale a TIMESTAMP WITH TIME ZONE
-        },
-        genero: {
-            type: Sequelize.BOOLEAN
-        },
-        id_usuario: {
-            type: Sequelize.INTEGER
-        }
-    });
+  sequelize
+    .query(
+      "CREATE SEQUENCE ESTUDIANTE_SEQ START WITH 1000 INCREMENT BY 1 NOMAXVALUE NOCYCLE CACHE 5 "
+    )
+    .catch(() => {});
 
-    // Relación: un docente pertenece a un usuario
-    Estudiante.belongsTo(Usuario, {
-        foreignKey: "id_usuario",
-        targetKey: "id",
-    });
+  const Estudiante = sequelize.define("estudiante", {
+    anio: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+    },
+    correlativo_carne: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      defaultValue: Sequelize.literal("ESTUDIANTE_SEQ.NEXTVAL"),
+    },
+    dpi: {
+      type: Sequelize.INTEGER,
+    },
+    primerNombre: {
+      type: Sequelize.STRING,
+    },
+    segundoNombre: {
+      type: Sequelize.STRING,
+    },
+    primerApellido: {
+      type: Sequelize.STRING,
+    },
+    segundoApellido: {
+      type: Sequelize.STRING,
+    },
+    fechaNacimiento: {
+      type: Sequelize.DATE,
+    },
+    genero: {
+      type: Sequelize.BOOLEAN,
+    },
+    id_usuario: {
+      type: Sequelize.INTEGER,
+    },
+  });
 
-    Usuario.hasOne(Estudiante, {
-        foreignKey: "id_usuario",
-        sourceKey: "id",
-    });
+  // Relación: un estudiante pertenece a un usuario
+  Estudiante.belongsTo(Usuario, {
+    foreignKey: "id_usuario",
+    targetKey: "id",
+  });
 
-    return Estudiante;
+  Usuario.hasOne(Estudiante, {
+    foreignKey: "id_usuario",
+    sourceKey: "id",
+  });
+
+  return Estudiante;
 };
