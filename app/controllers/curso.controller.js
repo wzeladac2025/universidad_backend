@@ -8,34 +8,45 @@ const Op = db.Sequelize.Op;
 // Create and Save a new Client
 exports.create = async (req, res) => {
   try {
-    if (!req.body.nombre_materia || !req.body.carnet_docente) {
-  return res.status(400).send({ 
-    message: `Debe incluir todos los detalles necesarios alnaior. 
-              (nombre_materia: ${req.body.nombre_materia || "no enviado"}, 
-              carnet_docente: ${req.body.carnet_docente || "no enviado"})` 
-  });
-}
+    console.log('[Cursos.create] body:', JSON.stringify(req.body));
+
+    const nombre_materia = req.body?.nombre_materia?.toString().trim();
+    const carnet_docente = req.body?.carnet_docente?.toString().trim();
+
+    const missing = [];
+    if (!nombre_materia) missing.push('nombre_materia');
+    if (!carnet_docente) missing.push('carnet_docente');
+
+    if (missing.length) {
+      console.log('[Cursos.create] Validation failed, missing:', missing);
+      return res.status(400).json({
+        message: `Faltan campos requeridos: ${missing.join(', ')}`,
+        details: {
+          nombre_materia: nombre_materia || 'no enviado',
+          carnet_docente: carnet_docente || 'no enviado'
+        }
+      });
+    }
 
     // Buscar docente por carnet
     const docente = await Docente.findOne({
-      where: { carnet: req.body.carnet_docente }, // 👈 asumiendo que el campo se llama "carnet"
-      attributes: ["id"]
+      where: { carnet: carnet_docente },
+      attributes: ['id']
     });
 
     if (!docente) {
-      return res.status(404).json({ message: "Docente no encontrado." });
+      return res.status(404).json({ message: 'Docente no encontrado.' });
     }
 
     const materia = await Materia.findOne({
-      where: { nombre: req.body.nombre_materia }, // 👈 asumiendo que el campo se llama "carnet"
-      attributes: ["id"]
+      where: { nombre: nombre_materia },
+      attributes: ['id']
     });
 
     if (!materia) {
-      return res.status(404).json({ message: "Materia no encontrado." });
+      return res.status(404).json({ message: 'Materia no encontrada.' });
     }
 
-    // Crear curso con la referencia al docente
     const curso = await Curso.create({
       periodo: req.body.periodo,
       seccion: req.body.seccion,
@@ -44,14 +55,13 @@ exports.create = async (req, res) => {
       id_docente: docente.id
     });
 
-    res.status(201).send(curso);
-
+    return res.status(201).json(curso);
   } catch (err) {
-    res.status(500).send({
-      message: err.message || "Error al crear el curso."
-    });
+    console.error('[Cursos.create] Error:', err);
+    return res.status(500).json({ message: err.message || 'Error al crear el curso.' });
   }
 };
+
 
 // Retrieve all Client from the database.
 exports.findAll = (req, res) => {
