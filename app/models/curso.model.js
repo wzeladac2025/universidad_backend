@@ -3,6 +3,11 @@ module.exports = (sequelize, Sequelize) => {
     const Docente = require("./docente.model")(sequelize, Sequelize);
 
     const Curso = sequelize.define("curso", {
+            id: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
         periodo: {
             type: Sequelize.STRING
         },

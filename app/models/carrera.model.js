@@ -3,6 +3,11 @@ module.exports = (sequelize, Sequelize) => {
     const Docente = require("./docente.model")(sequelize, Sequelize);
 
     const Carrera = sequelize.define("carrera", {
+            id: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
         nombre: {
             type: Sequelize.STRING
         },

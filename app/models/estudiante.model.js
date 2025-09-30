@@ -3,6 +3,11 @@ module.exports = (sequelize, Sequelize) => {
     const Usuario = require("./usuario.model.js")(sequelize, Sequelize);
 
     const Estudiante = sequelize.define("estudiante", {
+            id: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
         carnet: {
             type: Sequelize.STRING
         },

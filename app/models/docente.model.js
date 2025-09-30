@@ -3,6 +3,11 @@ module.exports = (sequelize, Sequelize) => {
     const Usuario = require("./usuario.model")(sequelize, Sequelize);
 
     const Docente = sequelize.define("docente", {
+            id: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
         DPI: {
             type: Sequelize.STRING
         },

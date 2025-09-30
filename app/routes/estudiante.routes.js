@@ -17,17 +17,18 @@ module.exports = (app) => {
    *             type: object
    *             properties:
    *                DIP:
-   *                  type: int
+   *                  type: integer
    *                nombre:
    *                  type: string
    *                apellido:
-   *                  type: string
+   *                  type: string    
    *                fechaNacimiento:
-   *                  type: date
+   *                  type: string
+   *                  format: date
    *                genero:
-   *                  type: char(1)
+   *                  type: boolean
    *                id_usuario:
-   *                  type: int
+   *                  type: integer
    *     responses:
    *       200:
    *         description: Estudiante creado

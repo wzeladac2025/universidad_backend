@@ -26,15 +26,15 @@ module.exports = app => {
    *               creditos:
    *                 type: integer
    *                 example: 5
-   *               cupo_maximo:
+   *               Semestre:
    *                 type: integer
    *                 example: 30
    *               Obligacion:
    *                 type: boolean
    *                 example: true
-   *               id_carrera:
-   *                 type: integer
-   *                 example: 1
+   *               nombre_carrera:
+   *                 type: string
+   *                 example: "Ingenieria en Sistemas"
    *     responses:
    *       200:
    *         description: Materia creada exitosamente
@@ -84,29 +84,24 @@ module.exports = app => {
    */
   router.get("/status", materia.findAllStatus);
 
-  /**
+     //Obtener estudiante por nombre
+    /**
    * @swagger
-   * /api/materia/{id}:
+   * /api/estudiante/{nombre}:
    *   get:
-   *     summary: Obtiene una materia por ID
-   *     tags:
-   *       - Materia
+   *     summary: Obtener estudiante por nombre
+   *     tags: [Materia]
    *     parameters:
-   *       - in: path
-   *         name: id
-   *         required: true
-   *         schema:
-   *           type: integer
-   *         description: ID de la materia
+   *        - in: path
+   *          name: nombre
+   *          type: string
+   *     description: Obtener estudiante por nombre
    *     responses:
    *       200:
-   *         description: Materia encontrada
-   *       404:
-   *         description: Materia no encontrada
-   *       500:
-   *         description: Error en el servidor
+   *         description: Estudiante encontrado
    */
-  router.get("/:id", materia.findOne);
+  //Obtener por id estudiante
+  router.get("/:nombre", materia.findOne);
 
   /**
    * @swagger
@@ -141,9 +136,9 @@ module.exports = app => {
    *               Obligacion:
    *                 type: boolean
    *                 example: false
-   *               id_carrera:
-   *                 type: integer
-   *                 example: 2
+   *               nombre_carrera:
+   *                 type: string
+   *                 example: "Ingeniería en Sistemas"
    *     responses:
    *       200:
    *         description: Materia actualizada exitosamente

@@ -28,12 +28,12 @@ module.exports = app => {
  *               cupo_maximo:
  *                 type: integer
  *                 example: 40
- *               id_docente:
- *                 type: integer
- *                 example: 12
- *               id_materia:
- *                 type: integer
- *                 example: 5
+ *               carnet_docente:
+ *                 type: string
+ *                 example: "D-25-2025"
+ *               nombre_materia:
+ *                 type: string
+ *                 example: "algebra lineal"
  *     responses:
  *       200:
  *         description: Curso creado exitosamente
@@ -138,12 +138,12 @@ module.exports = app => {
  *               cupo_maximo:
  *                 type: integer
  *                 example: 35
- *               id_docente:
- *                 type: integer
- *                 example: 7
- *               id_materia:
- *                 type: integer
- *                 example: 8
+ *               carnet_docente:
+ *                 type: string
+ *                 example: "E-2025-1"
+ *               nombre_materia:
+ *                 type: string
+ *                 example: "Algebra Lineal"
  *     responses:
  *       200:
  *         description: Curso actualizado exitosamente

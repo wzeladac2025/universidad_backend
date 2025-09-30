@@ -2,6 +2,11 @@ module.exports = (sequelize, Sequelize) => {
     const Carrera = require("./carrera.model")(sequelize, Sequelize);
 
     const Materia = sequelize.define("materia", {
+            id: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
         nombre: {
             type: Sequelize.STRING
         },
@@ -10,15 +15,12 @@ module.exports = (sequelize, Sequelize) => {
         },
         Semestre: {
             type: Sequelize.INTEGER,   // equivale a TIMESTAMP WITH TIME ZONE
-            field: "DURACION"
         },
         Obligacion: {
             type: Sequelize.BOOLEAN,   // equivale a TIMESTAMP WITH TIME ZONE
-            field: "DURACION"
         },
         id_carrera: {
             type: Sequelize.INTEGER,   // equivale a TIMESTAMP WITH TIME ZONE
-            field: "DURACION"
         }
     });
 
