@@ -20,5 +20,5 @@ const Verificador = (roles = []) => {
     };
 };
 
-// 🔴 exportamos correctamente
+//exportamos correctamente
 module.exports = Verificador;

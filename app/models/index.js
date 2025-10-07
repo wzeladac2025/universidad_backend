@@ -25,16 +25,16 @@ db.sequelize = sequelize;
 
 try {
   db.usuarios = require("./usuario.model.js")(sequelize, Sequelize);
-  console.log("✅ Modelo 'usuario' cargado correctamente.");
+  console.log("Modelo 'usuario' cargado correctamente.");
 } catch (err) {
-  console.error("❌ Error al cargar modelo 'usuario':", err.message);
+  console.error("Error al cargar modelo 'usuario':", err.message);
 }
 
 try {
   db.estudiante = require("./estudiante.model.js")(sequelize, Sequelize);
-  console.log("✅ Modelo 'estudiante' cargado correctamente.");
+  console.log("Modelo 'estudiante' cargado correctamente.");
 } catch (err) {
-  console.error("❌ Error al cargar modelo 'estudiante':", err.message);
+  console.error("Error al cargar modelo 'estudiante':", err.message);
 }
 
 db.boleta = require("./boleta.model.js")(sequelize, Sequelize);
