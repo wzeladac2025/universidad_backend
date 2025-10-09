@@ -59,6 +59,27 @@ try {
 }
 
 try {
+  db.materias = require("./curso_inscripcion.model.js")(sequelize, Sequelize);
+  console.log("✅ Modelo 'inscripcion' cargado correctamente. ");
+} catch (err) {
+  console.error("❌ Error al cargar modelo 'inscripcion':", err.message);
+}
+
+try {
+  db.materias = require("./horario.model.js")(sequelize, Sequelize);
+  console.log("✅ Modelo 'horario' cargado correctamente. ");
+} catch (err) {
+  console.error("❌ Error al cargar modelo 'horario':", err.message);
+}
+
+try {
+  db.materias = require("./notas.model.js")(sequelize, Sequelize);
+  console.log("✅ Modelo 'notas' cargado correctamente. ");
+} catch (err) {
+  console.error("❌ Error al cargar modelo 'notas':", err.message);
+}
+
+try {
   db.cursos = require("./curso.model.js")(sequelize, Sequelize);
   console.log("✅ Modelo 'curso' cargado correctamente. \n");
 } catch (err) {

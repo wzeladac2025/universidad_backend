@@ -71,6 +71,27 @@ try{
 }
 
 try{
+  require("./app/routes/curso_inscripcion.routes")(app);
+  console.log("✅ curso_inscripcion.routes.js cargado correctamente");
+}catch(err){
+  console.error("❌ Error al cargar curso_inscripcion.routes.js:", err.message);
+}
+
+try{
+  require("./app/routes/horario.routes")(app);
+  console.log("✅ horario.routes.js cargado correctamente");
+}catch(err){
+  console.error("❌ Error al cargar horario.routes.js:", err.message);
+}
+
+try{
+  require("./app/routes/notas.routes")(app);
+  console.log("✅ notas.routes.js cargado correctamente");
+}catch(err){
+  console.error("❌ Error al cargar notas.routes.js:", err.message);
+}
+
+try{
   require("./app/routes/curso.routes")(app);
   console.log("✅ curso.routes.js cargado correctamente\n");
 }catch(err){
