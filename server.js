@@ -92,6 +92,13 @@ try{
 }
 
 try{
+  require("./app/routes/estudiantecarrera.routes")(app);
+  console.log("✅ estudiantecarrera.routes.js cargado correctamente");
+}catch(err){
+  console.error("❌ Error al cargar estudiantecarrera.routes.js:", err.message);
+}
+
+try{
   require("./app/routes/curso.routes")(app);
   console.log("✅ curso.routes.js cargado correctamente\n");
 }catch(err){
