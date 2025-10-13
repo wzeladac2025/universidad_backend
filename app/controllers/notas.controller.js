@@ -138,9 +138,9 @@ exports.findOne = async (req, res) => {
     const nota = await Nota.findOne({
       where: { id_estudiante: estudiante.id, id_curso: curso.id },
       include: [
-        { model: Estudiante, attributes: ["id", "carnet", "fullname"] },
+        { model: Estudiante, as: "estudiante", attributes: ["id", "carnet", "nombre", "apellido"] },
         {
-          model: Curso,
+          model: Curso, as: "curso",
           attributes: ["id", "periodo"],
           include: [{ model: Materia, attributes: ["id", "nombre"] }]
         }
@@ -203,9 +203,9 @@ exports.update = async (req, res) => {
 
     const notaActualizada = await Nota.findByPk(id, {
       include: [
-        { model: Estudiante, attributes: ["id", "carnet", "fullname"] },
+        { model: Estudiante, as: "estudiante", attributes: ["id", "carnet", "nombre", "apellido"] },
         {
-          model: Curso,
+          model: Curso, as: "curso",
           attributes: ["id", "periodo"],
           include: [{ model: Materia, attributes: ["id", "nombre"] }]
         }

@@ -2,154 +2,176 @@ module.exports = app => {
     const horario = require("../controllers/horario.controller.js");
     var router = require("express").Router();
 
-    /**
- * @swagger
- * /api/estudianteCarrera:
- *   post:
- *     summary: Crear un registro de estudiante-carrera
- *     description: Relaciona un estudiante con una carrera específica.
- *     tags: [EstudianteCarrera]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - carnet_estudiante
- *               - nombre_carrera
- *               - fecha_ingreso
- *             properties:
- *               carnet_estudiante:
- *                 type: string
- *                 example: "20210001"
- *               nombre_carrera:
- *                 type: string
- *                 example: "Ingeniería en Sistemas"
- *               fecha_ingreso:
- *                 type: string
- *                 format: date
- *                 example: "2023-01-10"
- *               fecha_egreso:
- *                 type: string
- *                 format: date
- *                 example: "2025-10-10"
- *               estado:
- *                 type: string
- *                 example: "Activo"
- *     responses:
- *       201:
- *         description: Registro creado correctamente
- *       400:
- *         description: Datos incompletos
- *       404:
- *         description: Estudiante o Carrera no encontrados
- */
-    router.post("/create", horario.create);
+  /**
+   * @swagger
+   * tags:
+   *   name: Horario
+   *   description: Endpoints para gestionar los horarios de los cursos
+   */
 
-    /**
- * @swagger
- * /api/estudianteCarrera:
- *   get:
- *     summary: Listar todos los registros estudiante-carrera
- *     description: Obtiene todos los registros con los datos del estudiante y la carrera relacionados.
- *     tags: [EstudianteCarrera]
- *     responses:
- *       200:
- *         description: Lista de registros obtenida correctamente
- *       500:
- *         description: Error en el servidor
- */
-    router.get("/", horario.findAll);
+  /**
+   * @swagger
+   * /api/horario/create:
+   *   post:
+   *     summary: Crear un nuevo horario para un curso
+   *     tags: [Horario]
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required:
+   *               - dia_semana
+   *               - hora_inicio
+   *               - hora_fin
+   *               - aula
+   *               - periodo
+   *             properties:
+   *               dia_semana:
+   *                 type: string
+   *                 example: "Lunes"
+   *               hora_inicio:
+   *                 type: string
+   *                 format: time
+   *                 example: "08:00"
+   *               hora_fin:
+   *                 type: string
+   *                 format: time
+   *                 example: "10:00"
+   *               aula:
+   *                 type: string
+   *                 example: "A-201"
+   *               periodo:
+   *                 type: string
+   *                 example: "2025-1"
+   *               nombre_materia:
+   *                 type: string
+   *                 example: "Matemática I"
+   *     responses:
+   *       201:
+   *         description: Horario creado correctamente
+   *       400:
+   *         description: Faltan campos requeridos
+   *       404:
+   *         description: Curso no encontrado
+   *       500:
+   *         description: Error interno del servidor
+   */
+  router.post("/create", horario.create);
 
-    /**
- * @swagger
- * /api/estudianteCarrera/{id}:
- *   get:
- *     summary: Buscar un registro estudiante-carrera por ID
- *     tags: [EstudianteCarrera]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: integer
- *         required: true
- *         description: ID del registro estudiante-carrera
- *     responses:
- *       200:
- *         description: Registro encontrado
- *       404:
- *         description: No se encontró el registro
- */
-    router.get("/:id", horario.findOne);
+  /**
+   * @swagger
+   * /api/horario:
+   *   get:
+   *     summary: Obtener todos los horarios registrados
+   *     tags: [Horario]
+   *     responses:
+   *       200:
+   *         description: Lista de horarios obtenida correctamente
+   *       500:
+   *         description: Error al obtener los datos
+   */
+  router.get("/", horario.findAll);
 
-/**
- * @swagger
- * /api/estudianteCarrera/{id}:
- *   put:
- *     summary: Actualizar un registro estudiante-carrera
- *     tags: [EstudianteCarrera]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: integer
- *         required: true
- *         description: ID del registro a actualizar
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               carnet_estudiante:
- *                 type: string
- *                 example: "20210001"
- *               nombre_carrera:
- *                 type: string
- *                 example: "Derecho"
- *               fecha_ingreso:
- *                 type: string
- *                 format: date
- *                 example: "2024-01-15"
- *               fecha_egreso:
- *                 type: string
- *                 format: date
- *                 example: "2028-10-15"
- *               estado:
- *                 type: string
- *                 example: "Inactivo"
- *     responses:
- *       200:
- *         description: Registro actualizado correctamente
- *       400:
- *         description: Datos inválidos o no enviados
- *       404:
- *         description: Registro no encontrado
- */
-    router.put("/update/:id", horario.update);
+  /**
+   * @swagger
+   * /api/horario/{id}:
+   *   get:
+   *     summary: Obtener un horario por su ID
+   *     tags: [Horario]
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: ID del horario
+   *     responses:
+   *       200:
+   *         description: Horario encontrado correctamente
+   *       400:
+   *         description: ID no proporcionado
+   *       404:
+   *         description: Horario no encontrado
+   *       500:
+   *         description: Error al buscar el horario
+   */
+  router.get("/:id", horario.findOne);
 
-    /**
- * @swagger
- * /api/estudianteCarrera/{id}:
- *   delete:
- *     summary: Eliminar un registro estudiante-carrera por ID
- *     tags: [EstudianteCarrera]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: integer
- *         required: true
- *         description: ID del registro
- *     responses:
- *       200:
- *         description: Eliminado correctamente
- *       404:
- *         description: Registro no encontrado
- */
-    router.delete("/delete/:id", horario.delete);
+  /**
+   * @swagger
+   * /api/horario/update/{id}:
+   *   put:
+   *     summary: Actualizar un horario existente
+   *     tags: [Horario]
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: ID del horario a actualizar
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               nombre_curso:
+   *                 type: string
+   *                 example: "Programación I"
+   *               dia_semana:
+   *                 type: string
+   *                 example: "Martes"
+   *               hora_inicio:
+   *                 type: string
+   *                 format: time
+   *                 example: "09:00"
+   *               hora_fin:
+   *                 type: string
+   *                 format: time
+   *                 example: "11:00"
+   *               aula:
+   *                 type: string
+   *                 example: "B-103"
+   *     responses:
+   *       200:
+   *         description: Horario actualizado correctamente
+   *       400:
+   *         description: No se enviaron campos válidos o falta el ID
+   *       404:
+   *         description: Horario o curso no encontrado
+   *       500:
+   *         description: Error al actualizar el horario
+   */
+  router.put("/update/:id", horario.update);
 
-    app.use("/api/horario", router);
+  /**
+   * @swagger
+   * /api/horario/delete/{id}:
+   *   delete:
+   *     summary: Eliminar un horario por su ID
+   *     tags: [Horario]
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: ID del horario a eliminar
+   *     responses:
+   *       200:
+   *         description: Horario eliminado correctamente
+   *       400:
+   *         description: ID no proporcionado
+   *       404:
+   *         description: Horario no encontrado
+   *       500:
+   *         description: Error al eliminar el horario
+   */
+  router.delete("/delete/:id", horario.delete);
+
+  app.use("/api/horario", router);
 };

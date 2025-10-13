@@ -31,7 +31,7 @@ try {
 }
 
 try {
-db.estudiante = require("./estudiante.model.js")(sequelize, Sequelize);
+db.estudiantes = require("./estudiante.model.js")(sequelize, Sequelize);
   console.log("✅ Modelo 'estudiante' cargado correctamente.");
 } catch (err) {
   console.error("❌ Error al cargar modelo 'estudiante':", err.message);
@@ -80,7 +80,7 @@ try {
 }
 
 try {
-  db.estudiante_carreras = require("./estudaintecarrera.model.js")(sequelize, Sequelize);
+  db.estudiante_carreras = require("./estudiantecarrera.model.js")(sequelize, Sequelize);
   console.log("✅ Modelo 'estudiantecarrera' cargado correctamente. ");
 } catch (err) {
   console.error("❌ Error al cargar modelo 'estudiantecarrera':", err.message);

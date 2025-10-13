@@ -17,26 +17,28 @@ module.exports = (sequelize, Sequelize) => {
         }
     });
 
-    // Relacion de materia con curos
-    Curso.belongsTo(Curso_Inscripcion, {
+    // ✅ Un curso tiene muchas inscripciones
+    Curso.hasMany(Curso_Inscripcion, {
         foreignKey: "id_curso",
-        targetKey: "id",
+        as: "curso_inscripcion"
     });
 
-    Curso_Inscripcion.hasMany(Curso, {
+    // ✅ Una inscripción pertenece a un curso
+    Curso_Inscripcion.belongsTo(Curso, {
         foreignKey: "id_curso",
-        sourceKey: "id",
+        as: "curso"
     });
 
-    // Relacion entre docente y curso
-    Estudiante.belongsTo(Curso_Inscripcion, {
+    // ✅ Un estudiante tiene muchas inscripciones
+    Estudiante.hasMany(Curso_Inscripcion, {
         foreignKey: "id_estudiante",
-        targetKey: "id",
+        as: "inscripciones"
     });
 
-    Curso_Inscripcion.hasMany(Estudiante, {
+    // ✅ Una inscripción pertenece a un estudiante
+    Curso_Inscripcion.belongsTo(Estudiante, {
         foreignKey: "id_estudiante",
-        sourceKey: "id",
+        as: "estudiante"
     });
 
     return Curso_Inscripcion;

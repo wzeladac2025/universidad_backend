@@ -87,18 +87,18 @@ module.exports = app => {
      //Obtener estudiante por nombre
     /**
    * @swagger
-   * /api/estudiante/{nombre}:
+   * /api/materia/{nombre}:
    *   get:
-   *     summary: Obtener estudiante por nombre
+   *     summary: Obtener materia por nombre
    *     tags: [Materia]
    *     parameters:
    *        - in: path
    *          name: nombre
    *          type: string
-   *     description: Obtener estudiante por nombre
+   *     description: Obtener materia por nombre
    *     responses:
    *       200:
-   *         description: Estudiante encontrado
+   *         description: materia encontrado
    */
   //Obtener por id estudiante
   router.get("/:nombre", materia.findOne);

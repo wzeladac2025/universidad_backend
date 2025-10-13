@@ -1,16 +1,27 @@
 const db = require("../models");
 const Horario = db.horarios;
+const Materia = db.materias;
 const Curso = db.cursos;
 
 // Create
 exports.create = async (req, res) => {
-  if (!req.body.dia_semana || !req.body.hora_inicio || !req.body.hora_fin || !req.body.aula || !req.body.periodo) {
+  if (!req.body.dia_semana || !req.body.hora_inicio || !req.body.hora_fin || !req.body.aula || !req.body.periodo || !req.body.nombre_materia) {
     return res.status(400).send({ message: "Debe incluir todos los campos requeridos." });
   }
 
+  const materia = await Materia.findOne({
+      where: { nombre: req.body.nombre_materia },
+      attributes: ["id", "nombre"],
+    });
+    if (!materia) {
+      return res
+        .status(404)
+        .json({ message: `Materia no encontrada para nombre="${nombre_materia}"` });
+    }
+
   // Buscar curso por nombre
   const curso = await Curso.findOne({
-    where: { periodo: req.body.periodo },
+    where: { periodo: req.body.periodo, id_materia: materia.id },
     attributes: ["id"]
   });
 
@@ -63,16 +74,26 @@ exports.update = async (req, res) => {
     }
     const cambios = {};
 
-    if (req.body.nombre_curso) {
+    if (req.body.nombre_materia) {
+    const materia = await Materia.findOne({
+          where: { nombre: req.body.nombre_materia },
+          attributes: ["id", "nombre"],
+        });
+        if (!materia) {
+          return res
+            .status(404)
+            .json({ message: `Materia no encontrada para nombre="${nombre_materia}"` });
+        }
+
       const curso = await Curso.findOne({
-        where: { nombre: req.body.nombre_curso },
+        where: { id: materia.id },
         attributes: ["id"]
       });
       if (!curso) return res.status(404).json({ message: "Curso no encontrado." });
       cambios.id_curso = curso.id;
     }
 
-    if (req.body.dia_semana !== undefined) cambios.dia_semana = req.body.dia_semana;
+    if (req.body.dia_semana !==  undefined) cambios.dia_semana = req.body.dia_semana;
     if (req.body.hora_inicio !== undefined) cambios.hora_inicio = req.body.hora_inicio;
     if (req.body.hora_fin !== undefined) cambios.hora_fin = req.body.hora_fin;
     if (req.body.aula !== undefined) cambios.aula = req.body.aula;

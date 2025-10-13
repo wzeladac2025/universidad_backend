@@ -65,7 +65,7 @@ exports.create = async (req, res) => {
     }
 
     const verificador_carrera = await Carrera_Estudiante.findOne({
-      where: { id_estudiante: estudiante.id, id_materia: materia.id_carrera },
+      where: { id_estudiante: estudiante.id, id_carrera: materia.id_carrera },
       attributes: ["id", "fecha_ingreso"],
     });
     if (!verificador_carrera) {
@@ -84,10 +84,11 @@ exports.create = async (req, res) => {
 
     const createdFull = await Curso_Inscripcion.findByPk(created.id, {
       include: [
-        { model: Curso, attributes: ["id", "id_materia", "periodo"] },
-        { model: Estudiante, attributes: ["id", "carnet"] },
+        { model: Curso, as: "curso", attributes: ["id", "id_materia", "periodo"] },
+        { model: Estudiante, as: "estudiante", attributes: ["id", "carnet"] },
       ],
     });
+
 
     return res.status(201).json(createdFull || created);
   } catch (err) {
@@ -107,7 +108,6 @@ exports.obtenerCursosSiguienteSemestre = async (req, res) => {
 
     console.log("🔍 Validando campos:", { carnet_estudiante, nombre_carrera });
 
-    // 🧾 Validación de campos requeridos
     const missing = [];
     if (!carnet_estudiante) missing.push("carnet_estudiante");
     if (!nombre_carrera) missing.push("nombre_carrera");
@@ -123,7 +123,6 @@ exports.obtenerCursosSiguienteSemestre = async (req, res) => {
       });
     }
 
-    // Paso 1️⃣: Buscar carrera por nombre
     console.log("🧩 Buscando carrera:", nombre_carrera);
     const carrera = await Carrera.findOne({
       where: { nombre: nombre_carrera },
@@ -137,32 +136,36 @@ exports.obtenerCursosSiguienteSemestre = async (req, res) => {
 
     console.log("✅ Carrera encontrada:", carrera.toJSON());
 
-    // Paso 2️⃣: Determinar el siguiente semestre pendiente (PostgreSQL)
-    console.log("📘 Ejecutando consulta SQL para determinar siguiente semestre...");
+    // Paso 2️⃣: Determinar el siguiente semestre pendiente (Oracle SQL)
+    console.log("📘 Ejecutando consulta SQL Oracle para determinar siguiente semestre...");
 
     const [resultado] = await db.sequelize.query(
       `
       WITH MateriasAprobadas AS (
-          SELECT DISTINCT m.id
-          FROM curso_inscripcions ic
-          JOIN cursos c ON ic.id_curso = c.id
-          JOIN materia m ON c.id_materia = m.id
-          JOIN nota n ON ic.id_estudiante = n.id_estudiante AND ic.id_curso = n.id_curso
-          WHERE ic.id_estudiante = (
-              SELECT id FROM estudiantes WHERE carnet = :carnet_estudiante
-          )
-          AND ((COALESCE(n.primer_parcial, 0) + COALESCE(n.segundo_parcial, 0) + COALESCE(n.parcial_final, 0) + COALESCE(n.actividades, 0))) >= 61
+        SELECT DISTINCT m."id"
+        FROM "curso_inscripcions" ic
+        JOIN "cursos" c ON ic."id_curso" = c."id"
+        JOIN "materia" m ON c."id_materia" = m."id"
+        JOIN "nota" n ON ic."id_estudiante" = n."id_estudiante" AND ic."id_curso" = n."id_curso"
+        WHERE ic."id_estudiante" = (
+          SELECT "id" FROM "estudiantes" WHERE "carnet" = :carnet_estudiante
+        )
+        AND (
+          NVL(n."primer_parcial", 0) +
+          NVL(n."segundo_parcial", 0) +
+          NVL(n."parcial_final", 0) +
+          NVL(n."actividades", 0)
+        ) >= 61
       ),
       SemestresPendientes AS (
-          SELECT m."Semestre" AS semestre
-          FROM materia m
-          LEFT JOIN MateriasAprobadas ma ON m.id = ma.id
-          WHERE ma.id IS NULL
-          AND m.status = true
-          AND m.id_carrera = :id_carrera
+        SELECT m."Semestre"  AS semestre
+        FROM "materia" m
+        LEFT JOIN MateriasAprobadas ma ON m."id" = ma."id"
+        WHERE ma."id" IS NULL
+        AND m."id_carrera"= :id_carrera
       )
       SELECT MIN(semestre) AS siguiente_semestre
-      FROM SemestresPendientes;
+      FROM SemestresPendientes
       `,
       {
         replacements: {
@@ -175,7 +178,7 @@ exports.obtenerCursosSiguienteSemestre = async (req, res) => {
 
     console.log("📊 Resultado consulta siguiente semestre:", resultado);
 
-    const siguiente_semestre = resultado?.siguiente_semestre;
+    const siguiente_semestre = resultado?.SIGUIENTE_SEMESTRE; // Oracle devuelve mayúsculas por defecto
 
     if (!siguiente_semestre) {
       console.info("🎓 El estudiante ha completado todas las materias obligatorias.");
@@ -187,21 +190,22 @@ exports.obtenerCursosSiguienteSemestre = async (req, res) => {
 
     console.log(`📘 Siguiente semestre identificado: ${siguiente_semestre}`);
 
-    // Paso 3️⃣: Obtener los cursos disponibles para ese semestre
+    // Paso 3️⃣: Obtener los cursos disponibles para ese semestre (Oracle)
     console.log("🧠 Buscando cursos del siguiente semestre...");
+
     const cursos_siguiente = await db.sequelize.query(
       `
       SELECT 
-        c.id AS id_curso,
-        m.nombre AS nombre_materia,
-        c.seccion,
-        c.periodo,
-        c.cupo_maximo
-      FROM cursos c
-      JOIN materia m ON c.id_materia = m.id
-      WHERE m.duracion = :siguiente_semestre
-      AND m.id_carrera = :id_carrera
-      ORDER BY m.nombre ASC;
+        c."id" AS id_curso,
+        m."nombre" AS nombre_materia,
+        c."seccion",
+        c."periodo",
+        c."cupo_maximo"
+      FROM "cursos" c
+      JOIN "materia" m ON c."id_materia" = m."id"
+      WHERE m."Semestre"  = :siguiente_semestre
+      AND m."id_carrera" = :id_carrera
+      ORDER BY m."nombre" ASC
       `,
       {
         replacements: {
@@ -229,6 +233,7 @@ exports.obtenerCursosSiguienteSemestre = async (req, res) => {
   }
 };
 
+
 exports.findAll = async (req, res) => {
   try {
     const id_curso = req.query?.id_curso;
@@ -244,13 +249,11 @@ exports.findAll = async (req, res) => {
       where.id_curso = idParsed;
     }
 
-    const data = await Curso_Inscripcion.findAll({
-      where,
+    const data = await Curso_Inscripcion.findByPk(id, {
       include: [
-        { model: Curso, attributes: ["id", "id_materia", "periodo"] },
-        { model: Estudiante, attributes: ["id", "carnet"] },
+        { model: Curso, as: "curso", attributes: ["id", "id_materia", "periodo"] },
+        { model: Estudiante, as: "estudiante", attributes: ["id", "carnet"] },
       ],
-      order: [["id", "ASC"]],
     });
 
     return res.send(data);
@@ -273,8 +276,8 @@ exports.findOne = async (req, res) => {
 
     const row = await Curso_Inscripcion.findByPk(id, {
       include: [
-        { model: Curso, attributes: ["id", "id_materia", "periodo"] },
-        { model: Estudiante, attributes: ["id", "carnet"] },
+        { model: Curso, as: "curso", attributes: ["id", "id_materia", "periodo"] },
+        { model: Estudiante, as: "estudiante", attributes: ["id", "carnet"] },
       ],
     });
 
@@ -366,8 +369,8 @@ exports.update = async (req, res) => {
 
     const updatedRow = await Curso_Inscripcion.findByPk(id, {
       include: [
-        { model: Curso, attributes: ["id", "id_materia", "periodo"] },
-        { model: Estudiante, attributes: ["id", "carnet"] },
+        { model: Curso, as: "curso", attributes: ["id", "id_materia", "periodo"] },
+        { model: Estudiante, as: "estudiante", attributes: ["id", "carnet"] },
       ],
     });
 

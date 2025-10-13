@@ -11,7 +11,7 @@ module.exports = (sequelize, Sequelize) => {
         carnet: {
             type: Sequelize.STRING
         },
-        DPI: {
+        DPI: {  
             type: Sequelize.INTEGER
         },
         nombre: {

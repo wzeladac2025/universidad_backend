@@ -1,4 +1,7 @@
 module.exports = (sequelize, Sequelize) => {
+    const Estudiante = require("./estudiante.model")(sequelize, Sequelize);
+    const Curso = require("./curso.model")(sequelize, Sequelize);
+
   const Nota = sequelize.define("nota", {
     id: { 
       type: Sequelize.INTEGER,
@@ -37,6 +40,24 @@ module.exports = (sequelize, Sequelize) => {
       }
     ]
   });
+
+      Estudiante.hasMany(Nota, {
+      foreignKey: "id_estudiante",
+      as: "notas"
+    });
+    Nota.belongsTo(Estudiante, {
+      foreignKey: "id_estudiante",
+      as: "estudiante"
+    });
+
+    Curso.hasMany(Nota, {
+      foreignKey: "id_curso",
+      as: "notas"
+    });
+    Nota.belongsTo(Curso, {
+      foreignKey: "id_curso",
+      as: "curso"
+    });
 
   return Nota;
 };

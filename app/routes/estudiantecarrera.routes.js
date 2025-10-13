@@ -4,7 +4,7 @@ module.exports = app => {
 
     /**
  * @swagger
- * /api/estudianteCarrera:
+ * /api/estudianteCarrera/create:
  *   post:
  *     summary: Crear un registro de estudiante-carrera
  *     description: Relaciona un estudiante con una carrera específica.

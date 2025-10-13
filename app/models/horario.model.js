@@ -3,7 +3,7 @@ module.exports = (sequelize, Sequelize) => {
 
   const Horario = sequelize.define("horario", {
     dia_semana: {
-      type: Sequelize.STRING(15),
+      type: Sequelize.ENUM("Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"),
       allowNull: false
     },
     hora_inicio: {
