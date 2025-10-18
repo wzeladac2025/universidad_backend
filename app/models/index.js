@@ -39,8 +39,9 @@ try {
 
 db.boleta = require("./boleta.model.js")(sequelize, Sequelize);
 db.factura = require("./factura.model.js")(sequelize, Sequelize);
+db.constancia = require("./constancia.model.js")(sequelize, Sequelize);
 
-//Definir relaciones entre modelos
+// Definir relaciones entre modelos
 db.estudiante.hasMany(db.boleta, {
   foreignKey: "id_estudiante",
   as: "boletas"
@@ -49,6 +50,26 @@ db.estudiante.hasMany(db.boleta, {
 db.boleta.belongsTo(db.estudiante, {
   foreignKey: "id_estudiante",
   as: "estudiante"
+});
+
+db.boleta.hasOne(db.factura, {
+  foreignKey: "id_boleta",
+  as: "factura"
+});
+
+db.factura.belongsTo(db.boleta, {
+  foreignKey: "id_boleta",
+  as: "boleta"
+});
+
+db.factura.hasOne(db.constancia, {
+  foreignKey: "id_factura",
+  as: "constancia"
+});
+
+db.constancia.belongsTo(db.factura, {
+  foreignKey: "id_factura",
+  as: "factura"
 });
 
 module.exports = db;

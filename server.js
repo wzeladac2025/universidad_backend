@@ -37,20 +37,21 @@ app.get("/", (req, res) => {
 });
 try{
   require("./app/routes/usuario.routes")(app);
-  console.log("✅ usuario.routes.js cargado correctamente");
+  console.log("usuario.routes.js cargado correctamente");
 }catch(err){
-  console.error("❌ Error al cargar usuario.routes.js:", err.message);
+  console.error("Error al cargar usuario.routes.js:", err.message);
 }
 
 try{
   require("./app/routes/estudiante.routes")(app);
-  console.log("✅ docente.routes.js cargado correctamente");
+  console.log("docente.routes.js cargado correctamente");
 }catch(err){
-  console.error("❌ Error al cargar docente.routes.js:", err.message);
+  console.error("Error al cargar docente.routes.js:", err.message);
 }
 
 require("./app/routes/boleta.route")(app);
 require("./app/routes/factura.route")(app);
+require("./app/routes/constancia.route")(app);
 
 const PORT = process.env.PORT || 8081;
 app.listen(PORT, () => {
