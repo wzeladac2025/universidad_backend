@@ -9,22 +9,16 @@ exports.create = (req, res) => {
     }
 
     const nuevaNotificacion = {
-        id_curso: req.body.id_curso,
-        id_estudiante: req.body.id_estudiante,
-        id_tarea: req.body.id_tarea || null,
-        tipo_notificacion: req.body.tipo_notificacion,
-        titulo: req.body.titulo,
+        id_usuario: req.body.id_usuario,
+        correo: req.body.correo,
         mensaje: req.body.mensaje,
-        fecha_envio: req.body.fecha_envio || new Date(),
-        estado_notificacion: req.body.estado_notificacion || "pendiente",
-        canal_envio: req.body.canal_envio || "plataforma",
-        prioridad: req.body.prioridad || "media"
+        estado_notificacion: req.body.estado_notificacion || "pendiente"
     };
 
     Notificacion.create(nuevaNotificacion)
         .then(data => res.send(data))
         .catch(err => {
-            res.status(500).send({ message: err.message || "Error al crear la notificación." });
+            res.status(500).send({ message: err.message || "Error al crear la notificación de pago." });
         });
 };
 
@@ -88,7 +82,7 @@ exports.deleteAll = (req, res) => {
 };
 
 // Encontrar todas las notificaciones por estado (ej. enviadas)
-exports.findAllByEstado = (req, res) => {
+/*exports.findAllByEstado = (req, res) => {
     const estado = req.query.estado || "pendiente";
 
     Notificacion.findAll({ where: { estado_notificacion: estado } })
@@ -96,4 +90,4 @@ exports.findAllByEstado = (req, res) => {
         .catch(err => {
             res.status(500).send({ message: err.message || "Error al obtener notificaciones filtradas por estado." });
         });
-};
+};*/

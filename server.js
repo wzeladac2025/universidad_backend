@@ -51,19 +51,18 @@ app.listen(PORT, () => {
 });
 
 try {
-  require("./app/routes/notificacion_pago.routes.js")(app);
-  console.log("notificacion_pago.routes.js cargado correctamente");
+  require("./app/routes/notificacion_pago.route.js")(app);
+  console.log("✅notificacion_pago.route.js cargado correctamente");
 } catch (err) {
-  console.error("Error al cargar notificacion_pago.routes.js:", err.message);
+  console.error("❌Error al cargar notificacion_pago.route.js:", err.message);
 }
 
 try {
-  require("./app/routes/tipo_notificacion.routes.js")(app);
-  console.log("tipo_notificacion.routes.js cargado correctamente");
+  require("./app/routes/tipo_notificacion.route.js")(app);
+  console.log("✅tipo_notificacion.route.js cargado correctamente");
 } catch (err) {
-  console.error("Error al cargar tipo_notificacion.routes.js:", err.message);
+  console.error("❌Error al cargar tipo_notificacion.route.js:", err.message);
 }
-
 /*const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");

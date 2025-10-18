@@ -41,3 +41,4 @@ module.exports = (sequelize, Sequelize) => {
     return NotificacionPago;
 };
 
+

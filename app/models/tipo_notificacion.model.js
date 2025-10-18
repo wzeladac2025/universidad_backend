@@ -13,10 +13,10 @@ module.exports = (sequelize, Sequelize) => {
                 key: "id_curso"
             }
         },*/
-        id_estudiante: {
+       id_usuario: {
             type: Sequelize.INTEGER,
             references: {
-                model: "estudiantes", // 👈 nombre de la tabla relacionada
+                model: "usuarios", // 👈 nombre de la tabla relacionada
                 key: "id"
             }
         },
@@ -30,10 +30,10 @@ module.exports = (sequelize, Sequelize) => {
         },*/
         tipo_notificacion: {
             type: Sequelize.ENUM(
-                "TAREA_ASIGNADA",
-                "TAREA_CALIFICADA",
-                "RECORDATORIO_ENTREGA",
-                "AVISO_GENERAL"
+                "EVALUACION",
+                "TAREA",
+                "NOTA",
+                "AVISO"
             ),
             allowNull: false
         },
@@ -51,7 +51,7 @@ module.exports = (sequelize, Sequelize) => {
             defaultValue: Sequelize.NOW
         },
         estado_notificacion: {
-            type: Sequelize.ENUM("pendiente", "enviada", "leída"),
+            type: Sequelize.ENUM("pendiente", "enviada", "leIda"),
             allowNull: false,
             defaultValue: "pendiente"
         },

@@ -10,14 +10,14 @@ exports.create = (req, res) => {
 
     const nuevaNotificacion = {
         //id_curso: req.body.id_curso,
-        id_estudiante: req.body.id_estudiante,
+        id_usuario: req.body.id_usuario,
         //id_tarea: req.body.id_tarea || null,
         tipo_notificacion: req.body.tipo_notificacion,
         titulo: req.body.titulo,
         mensaje: req.body.mensaje,
         fecha_envio: req.body.fecha_envio || new Date(),
         estado_notificacion: req.body.estado_notificacion || "pendiente",
-        canal_envio: req.body.canal_envio || "plataforma",
+        correo: req.body.correo,
         prioridad: req.body.prioridad || "media"
     };
 

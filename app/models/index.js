@@ -22,6 +22,18 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 db.estudiante = require("./estudiante.model.js")(sequelize, Sequelize);
-db.notificacionpago = require("./notificacion_pago.model.js")(sequelize, Sequelize);
-db.tipo_notificacion = require("./tipo_notificacion.model.js")(sequelize, Sequelize);
+try {
+  db.tipo_notificacion = require("./tipo_notificacion.model.js")(sequelize, Sequelize);
+  console.log("✅ Modelo 'tipo_notificacion' cargado correctamente.");
+} catch (err) {
+  console.error("❌ Error al cargar modelo 'tipo_notificacion':", err.message);
+}
+
+try {
+  db.notificacion = require("./notificacion_pago.model.js")(sequelize, Sequelize);
+  console.log("✅ Modelo 'notificacion_pago' cargado correctamente.");
+} catch (err) {
+  console.error("❌ Error al cargar modelo 'notificacion_pago':", err.message);
+}
+
 module.exports = db;
