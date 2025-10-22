@@ -87,6 +87,19 @@ try {
 }
 
 try {
+  db.tareas = require("./tarea.model.js")(sequelize, Sequelize);
+  console.log("✅ Modelo 'tarea' cargado correctamente. ");
+} catch (err) {
+  console.error("❌ Error al cargar modelo 'tarea':", err.message);
+}
+try {
+  db.tareas_estudiantes = require("./estudiante_tarea.model.js")(sequelize, Sequelize);
+  console.log("✅ Modelo 'estudiante tarea' cargado correctamente. ");
+} catch (err) {
+  console.error("❌ Error al cargar modelo 'estudiante tarea':", err.message);
+}
+
+try {
   db.cursos = require("./curso.model.js")(sequelize, Sequelize);
   console.log("✅ Modelo 'curso' cargado correctamente. \n");
 } catch (err) {

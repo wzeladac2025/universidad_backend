@@ -99,6 +99,20 @@ try{
 }
 
 try{
+  require("./app/routes/tarea.routes")(app);
+  console.log("✅ tarea.routes.js cargado correctamente");
+}catch(err){
+  console.error("❌ Error al cargar tarea.routes.js:", err.message);
+}
+
+try{
+  require("./app/routes/tarea_estudiante.routes")(app);
+  console.log("✅ tarea_estudiante.routes.js cargado correctamente");
+}catch(err){
+  console.error("❌ Error al cargar tarea_estudiante.routes.js:", err.message);
+}
+
+try{
   require("./app/routes/curso.routes")(app);
   console.log("✅ curso.routes.js cargado correctamente\n");
 }catch(err){

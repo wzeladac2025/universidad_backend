@@ -82,17 +82,26 @@ exports.findAll = (req, res) => {
 
 // Find a single Tutorial with an id
 exports.findOne = async (req, res) => {
-    try {
-        const curso = await Curso.findOne({ where: { id_materia: req.body.id_materia } });
-        if (!curso) {
-            return res.status(404).send({ message: "Curso no encontrado" });
-        }
+  try {
+    const curso = await Curso.findOne({ where: { id: req.params.id } });
 
-        res.send({ message: "Curso encontrado " });
-    } catch (err) {
-        res.status(500).send({ message: err.message });
+    if (!curso) {
+      return res.status(404).send({ message: "Curso no encontrado" });
     }
+
+    // Enviar el curso junto con el mensaje
+    res.status(200).send({
+      message: "Curso encontrado",
+      data: curso
+    });
+  } catch (err) {
+    res.status(500).send({
+      message: "Error al obtener el curso",
+      error: err.message
+    });
+  }
 };
+
 
 // Update a Tutorial by the id in the request
 exports.update = async (req, res) => {

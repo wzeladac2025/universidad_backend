@@ -119,7 +119,7 @@ module.exports = app => {
    *           schema:
    *             type: object
    *             properties:
-   *               nombre_curso:
+   *               nombre_materia:
    *                 type: string
    *                 example: "Programación I"
    *               dia_semana:
