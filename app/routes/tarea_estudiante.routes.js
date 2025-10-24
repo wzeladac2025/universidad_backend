@@ -20,6 +20,12 @@ module.exports = app => {
    *               - carnet_estudiante
    *               - id_tarea
    *             properties:
+   *               direccion_archivo:
+   *                 type: string
+   *                 example: "/uploads/tarea1.pdf"
+   *               punteo:
+   *                 type: integer
+   *                 example: 10
    *               carnet_estudiante:
    *                 type: string
    *                 example: "E-2025-100"
@@ -108,6 +114,12 @@ module.exports = app => {
    *           schema:
    *             type: object
    *             properties:
+   *               direccion_archivo:
+   *                 type: string
+   *                 example: "/uploads/tarea1.pdf"
+   *               punteo:
+   *                 type: integer
+   *                 example: 10
    *               carnet_estudiante:
    *                 type: string
    *                 example: "E-2025-101"

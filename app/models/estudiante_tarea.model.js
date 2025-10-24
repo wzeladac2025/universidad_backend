@@ -8,6 +8,12 @@ module.exports = (sequelize, Sequelize) => {
             primaryKey: true,
             autoIncrement: true
         },
+            direccion_archivo: {
+            type: Sequelize.STRING
+        },
+            punteo: {
+            type: Sequelize.INTEGER
+        },
             id_tarea: {
             type: Sequelize.INTEGER
         },

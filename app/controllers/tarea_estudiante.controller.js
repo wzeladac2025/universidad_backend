@@ -35,6 +35,7 @@ exports.create = async (req, res) => {
     }
 
     const tarea = await Tarea_Estudiante.create({
+      direccion_archivo: req.body.direccion_archivo,
       id_tarea: req.body.id_tarea,
       id_estudiante: estudiante.id
     });
@@ -104,6 +105,8 @@ exports.update = async (req, res) => {
 
     // Otros campos directos (solo si vienen en req.body)
     if (req.body.id_tarea !== undefined) cambios.id_tarea = req.body.id_tarea;
+    if (req.body.direccion_archivo !== undefined) cambios.direccion_archivo = req.body.direccion_archivo;
+    if (req.body.punteo !== undefined) cambios.punteo = req.body.punteo;
 
     // Si no hay nada para actualizar, devolvemos error
     if (Object.keys(cambios).length === 0) {
