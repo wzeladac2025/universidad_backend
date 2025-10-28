@@ -5,7 +5,7 @@ module.exports = (sequelize, Sequelize) => {
     .query(
       "CREATE SEQUENCE ESTUDIANTE_SEQ START WITH 1000 INCREMENT BY 1 NOMAXVALUE NOCYCLE CACHE 5 "
     )
-    .catch(() => {});
+    .catch(() => { });
 
   const Estudiante = sequelize.define("estudiante", {
     anio: {
@@ -20,16 +20,10 @@ module.exports = (sequelize, Sequelize) => {
     dpi: {
       type: Sequelize.INTEGER,
     },
-    primerNombre: {
+    nombres: {
       type: Sequelize.STRING,
     },
-    segundoNombre: {
-      type: Sequelize.STRING,
-    },
-    primerApellido: {
-      type: Sequelize.STRING,
-    },
-    segundoApellido: {
+    apellidos: {
       type: Sequelize.STRING,
     },
     fechaNacimiento: {

@@ -3,16 +3,13 @@ module.exports = (sequelize, Sequelize) => {
   const Usuario = require("./usuario.model")(sequelize, Sequelize);
 
   const Docente = sequelize.define("docente", {
-    DPI: {
+    dpi: {
       type: Sequelize.STRING,
     },
-    carnet: {
+    nombres: {
       type: Sequelize.STRING,
     },
-    nombre: {
-      type: Sequelize.STRING,
-    },
-    apellido: {
+    apellidos: {
       type: Sequelize.STRING,
     },
     fechaNacimiento: {
@@ -26,16 +23,7 @@ module.exports = (sequelize, Sequelize) => {
     },
     id_usuario: {
       type: Sequelize.INTEGER,
-    },
-    id_carrera: {
-      type: Sequelize.INTEGER,
-    },
-    status_carrera: {
-      type: Sequelize.BOOLEAN,
-      defaultValue: false,
-      // true: carrera asignada
-      // false: sin asignar carrera
-    },
+    }
   });
 
   Docente.belongsTo(Usuario, {

@@ -2,13 +2,11 @@ const db = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const Op = db.Sequelize.Op;
 const Usuario = db.usuario;
 const Estudiante = db.estudiante;
 const Docente = db.docente;
 
 exports.create = async (req, res) => {
-  let response = null;
   try {
     if (!req.body.correo && !req.body.contrasena) {
       res.status(400).send({
@@ -37,18 +35,14 @@ exports.create = async (req, res) => {
     //OBJETO BASE
     const objEstudiante = {
       anio: new Date().getFullYear(),
-      primerNombre: req.body.primerNombre,
-      segundoNombre: req.body.segundoNombre,
-      primerApellido: req.body.primerApellido,
-      segundoApellido: req.body.segundoApellido,
+      nombres: req.body.nombres,
+      apellidos: req.body.apellidos,
       id_usuario: nuevoUsuario.null,
     };
 
     const objDocente = {
-      primerNombre: req.body.primerNombre,
-      segundoNombre: req.body.segundoNombre,
-      primerApellido: req.body.primerApellido,
-      segundoApellido: req.body.segundoApellido,
+      nombres: req.body.nombres,
+      apellidos: req.body.apellidos,
       id_usuario: nuevoUsuario.null,
     };
 
@@ -81,36 +75,25 @@ exports.create = async (req, res) => {
   }
 };
 
-exports.findAll = (req, res) => {
-  const nombre = req.query.correo;
-  var condition = nombre ? { nombre: { [Op.iLike]: `%${nombre}%` } } : null;
-
-  Usuario.findAll({ where: condition })
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while retrieving Users.",
-      });
-    });
-};
-
-exports.findOne = async (req, res) => {
+exports.login = async (req, res) => {
+  const { correo, contrasena } = req.body;
   try {
-    const usuario = await Usuario.findOne({
-      where: { correo: req.body.correo },
-    });
+    const query = await db.sequelize.query(
+      "select * from usuarios where correo = '" + correo + "'",
+      {
+        model: Usuario,
+        mapToModel: true,
+      }
+    );
+
+    const usuario = query[0]?.dataValues;
     if (!usuario) {
-      return res.status(404).send({ message: "Usuario no encontrado" });
+      return res.status(404).send({ mensaje: "Usuario no registrado." });
     }
 
-    const validPassword = await bcrypt.compare(
-      req.body.contrasena,
-      usuario.contrasena
-    );
+    const validPassword = await bcrypt.compare(contrasena, usuario.contrasena);
     if (!validPassword) {
-      return res.status(401).send({ message: "Contraseña incorrecta" });
+      return res.status(401).send({ mensaje: "Contraseña incorrecta." });
     }
 
     const token = jwt.sign(
@@ -119,82 +102,32 @@ exports.findOne = async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    res.send({ message: "Login exitoso", token });
+    return res.send({ mensaje: "Sesion Iniciada.", access_token: token });
   } catch (err) {
-    res.status(500).send({ message: err.message });
+    return res.status(401).send({ mensaje: err.message });
   }
 };
 
-exports.update = (req, res) => {
+exports.findById = async (req, res) => {
   const id = req.params.id;
-
-  Usuario.update(req.body, {
-    where: { id: id },
-  })
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          message: "User was updated successfully.",
-        });
-      } else {
-        res.send({
-          message: `Cannot update User with id=${id}. Maybe User was not found or req.body is empty!`,
-        });
-      }
+  const query = await db.sequelize
+    .query("select * from usuarios where id = " + id, {
+      model: Usuario,
+      mapToModel: true,
     })
     .catch((err) => {
-      res.status(500).send({
-        message: "Error updating User with id=" + id,
+      return res.status(500).send({
+        message: err.message || "Error al obtener el usuario.",
       });
     });
-};
 
-exports.delete = (req, res) => {
-  const id = req.params.id;
-  Usuario.destroy({
-    where: { id: id },
-  })
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          message: "User was deleted successfully!",
-        });
-      } else {
-        res.send({
-          message: `Cannot delete User with id=${id}. El usuario no fue encontado!`,
-        });
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Could not delete User with id=" + id,
-      });
-    });
-};
-
-exports.deleteAll = (req, res) => {
-  Usuario.destroy({
-    where: {},
-    truncate: false,
-  })
-    .then((nums) => {
-      res.send({ message: `${nums} User were deleted successfully!` });
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while removing all users.",
-      });
-    });
-};
-
-exports.findAllStatus = (req, res) => {
-  Usuario.findAll({ where: { status: true } })
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while retrieving User.",
-      });
-    });
+  const usuario = query[0]?.dataValues;
+  if (!usuario) {
+    return res.status(404).send({ message: "Usuario no registrado." });
+  }
+  return res.send({
+    id: usuario.id,
+    correo: usuario.correo,
+    role: usuario.role,
+  });
 };

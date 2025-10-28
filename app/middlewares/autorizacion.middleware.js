@@ -12,7 +12,7 @@ const Verificador = (roles = []) => {
       if (err) return res.status(403).send({ message: "Token inválido" });
 
       if (roles.length && !roles.includes(user.role)) {
-        return res.status(403).send({ message: "No tienes permisos" });
+        return res.status(403).send({ message: "No Autorizado" });
       }
 
       req.user = user;

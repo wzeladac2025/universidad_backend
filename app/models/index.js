@@ -16,6 +16,7 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
       rejectUnauthorized: false,
     },
   },
+  logging: false
 });
 
 const db = {};
@@ -42,13 +43,6 @@ try {
   console.log("✅ Modelo 'docente' cargado correctamente.");
 } catch (err) {
   console.error("❌ Error al cargar modelo 'docente':", err.message);
-}
-
-try {
-  db.carrera = require("./carrera.model.js")(sequelize, Sequelize);
-  console.log("✅ Modelo 'carrera' cargado correctamente. \n");
-} catch (err) {
-  console.error("❌ Error al cargar modelo 'carrera':", err.message, "\n");
 }
 
 module.exports = db;

@@ -1,10 +1,8 @@
 module.exports = (app) => {
-  const Verificador = require("../middlewares/autorizacion.middleware.js");
-  const soloadmin = Verificador(["admin"]);
-
+  const security = require("../config/security.config.js");
   const usuario = require("../controllers/usuario.controller.js");
   var router = require("express").Router();
-  //Nuevo Usuario
+
   /**
    * @swagger
    * /api/usuario/register/:
@@ -24,13 +22,10 @@ module.exports = (app) => {
    *                  type: string
    *                role:
    *                  type: string
-   *                primerNombre:
+   *                  enum: [estudiante, docente, admin]
+   *                nombres:
    *                  type: string
-   *                segundoNombre:
-   *                  type: string
-   *                primerApellido:
-   *                  type: string
-   *                segundoApellido:
+   *                apellidos:
    *                  type: string
    *     responses:
    *       200:
@@ -40,17 +35,48 @@ module.exports = (app) => {
    */
   router.post("/register/", usuario.create);
 
-  router.get("/", soloadmin, usuario.findAll);
+  /**
+   * @swagger
+   * /api/usuario/login/:
+   *   post:
+   *     summary: Autenticar Usuario
+   *     tags: [Usuario]
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *                correo:
+   *                  type: string
+   *                contrasena:
+   *                  type: string
+   *     responses:
+   *       200:
+   *         description: Usuario Autenticado
+   *       400:
+   *         description: Error al autenticar Usuario
+   */
+  router.post("/login/", usuario.login);
 
-  router.get("/status", soloadmin, usuario.findAllStatus);
-
-  router.get("/login", usuario.findOne);
-
-  router.put("/update/:id", soloadmin, usuario.update);
-
-  router.delete("/delete/:id", Verificador(["admin"]), usuario.delete);
-
-  router.delete("/delete/", Verificador(["admin"]), usuario.deleteAll);
+  /**
+   * @swagger
+   * /api/usuario/{id}:
+   *   get:
+   *     summary: Obtener usuario por id
+   *     tags: [Usuario]
+   *     security:
+   *        - bearerAuth: []
+   *     parameters:
+   *        - in: path
+   *          name: id
+   *          type: string
+   *     responses:
+   *       200:
+   *         description: Usuario encontrado
+   */
+  router.get("/:id", security.ROLE_TODOS, usuario.findById);
 
   app.use("/api/usuario", router);
 };

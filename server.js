@@ -6,11 +6,11 @@ const swaggerUI = require("swagger-ui-express");
 
 const app = express();
 
-var corsOptions = {
-  origin: "http://localhost:8081",
-};
+// var corsOptions = {
+//   origin: "http://localhost:8081",
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -42,25 +42,17 @@ try{
 }catch(err){
   console.error("❌ Error al cargar usuario.routes.js:", err.message);
 }
-
 try{
   require("./app/routes/estudiante.routes")(app);
   console.log("✅ estudiante.routes.js cargado correctamente");
 }catch(err){
   console.error("❌ Error al cargar estudiante.routes.js:", err.message);
 }
-
 try{
   require("./app/routes/docente.routes")(app);
   console.log("✅ docente.routes.js cargado correctamente");
 }catch(err){
   console.error("❌ Error al cargar docente.routes.js:", err.message);
-}
-try{
-  require("./app/routes/carrera.routes")(app);
-  console.log("✅ carrera.routes.js cargado correctamente\n");
-}catch(err){
-  console.error("❌ Error al cargar carrera.routes.js:", err.message, "\n");
 }
 
 const PORT = process.env.PORT || 8081;
