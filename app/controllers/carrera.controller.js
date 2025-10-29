@@ -55,7 +55,6 @@ exports.findById = async (req, res) => {
 };
 
 exports.findAll = async (req, res) => {
-  const id = req.params.id;
   const query = await db.sequelize
     .query('SELECT * FROM "carreras" u', {
       model: Carrera,
