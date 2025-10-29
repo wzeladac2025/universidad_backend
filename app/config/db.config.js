@@ -1,10 +1,10 @@
 module.exports = {
-  HOST: "25.5.74.72",
+  HOST: "206.189.193.115",
   USER: "universidad",
   PASSWORD: "rootadmin",
   DB: "XEPDB1",
   dialect: "oracle",
-  port: 1525,
+  port: 1521,
   pool: {
     max: 5,
     min: 0,

@@ -9,10 +9,9 @@ const Docente = db.docente;
 exports.create = async (req, res) => {
   try {
     if (!req.body.correo && !req.body.contrasena) {
-      res.status(400).send({
-        message: "Necesita ingresar el correo y la contraseña.",
+      return res.status(400).send({
+        mensaje: "Necesita ingresar el correo y la contraseña.",
       });
-      return;
     }
 
     const hashedPassword = await bcrypt.hash(req.body.contrasena, 10);
@@ -26,7 +25,7 @@ exports.create = async (req, res) => {
     const usuario = Usuario.build(usuarioObj);
     const nuevoUsuario = await usuario.save().catch((err) => {
       res.status(500).send({
-        message:
+        mensaje:
           err.message ||
           "Error al crear el usuario. Consulte a su administrador.",
       });
@@ -52,15 +51,17 @@ exports.create = async (req, res) => {
         const estudiante = Estudiante.build(objEstudiante);
         estudiante.save().catch(() => {
           res.status(500).send({
-            message:
+            mensaje:
               "Error al crear el estudiante. Consulte a su administrador.",
           });
         });
         break;
       case "docente":
-        Docente.create(objDocente).catch(() => {
+        const docente = Docente.build(objDocente);
+        docente.save().catch(() => {
           res.status(500).send({
-            message: "Error al crear el docente. Consulte a su administrador.",
+            mensaje:
+              "Error al crear el estudiante. Consulte a su administrador.",
           });
         });
         break;
@@ -68,18 +69,18 @@ exports.create = async (req, res) => {
         break;
     }
 
-    res.send(response);
+    res.send({ mensaje: "Usuario creado", correo: nuevoUsuario.correo });
   } catch (err) {
-    res.status(500).send({ message: err.message });
-    console.log("hubo un error inesperado", err.message);
+    res.status(500).send({ mensaje: err.message });
+    console.log("Hubo un error inesperado", err.message);
   }
 };
 
 exports.login = async (req, res) => {
-  const { correo, contrasena } = req.body;
+  const { correo, contrasena, role } = req.body;
   try {
     const query = await db.sequelize.query(
-      "select * from usuarios where correo = '" + correo + "'",
+      'select u.* from "usuarios" u where u."correo" = \'' + correo + "'",
       {
         model: Usuario,
         mapToModel: true,
@@ -89,6 +90,10 @@ exports.login = async (req, res) => {
     const usuario = query[0]?.dataValues;
     if (!usuario) {
       return res.status(404).send({ mensaje: "Usuario no registrado." });
+    }
+
+    if(role != usuario.role){
+      return res.status(404).send({ mensaje: "Tu perfil de usuario no es correcto." });      
     }
 
     const validPassword = await bcrypt.compare(contrasena, usuario.contrasena);
@@ -102,7 +107,11 @@ exports.login = async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    return res.send({ mensaje: "Sesion Iniciada.", access_token: token });
+    return res.send({
+      mensaje: "Sesion Iniciada.",
+      access_token: token,
+      idUsuario: usuario.id,
+    });
   } catch (err) {
     return res.status(401).send({ mensaje: err.message });
   }
@@ -111,23 +120,42 @@ exports.login = async (req, res) => {
 exports.findById = async (req, res) => {
   const id = req.params.id;
   const query = await db.sequelize
-    .query("select * from usuarios where id = " + id, {
+    .query('SELECT * FROM "usuarios" u WHERE u."id" = ' + id, {
       model: Usuario,
       mapToModel: true,
     })
     .catch((err) => {
       return res.status(500).send({
-        message: err.message || "Error al obtener el usuario.",
+        mensaje: err.message || "Error al obtener el usuario.",
       });
     });
 
   const usuario = query[0]?.dataValues;
   if (!usuario) {
-    return res.status(404).send({ message: "Usuario no registrado." });
+    return res.status(404).send({ mensaje: "Usuario no registrado." });
+  }
+
+  let datos = null;
+  if (usuario.role == "estudiante" || usuario.role == "docente") {
+    let tablaObjeto = usuario.role + "s";
+    const query = await db.sequelize
+      .query('SELECT * FROM "' + tablaObjeto + '" u WHERE u."id_usuario" = ' + id, {
+        model: Usuario,
+        mapToModel: true,
+      })
+      .catch((err) => {
+        return res.status(500).send({
+          mensaje: err.message || "Error al obtener el usuario.",
+        });
+      });
+
+    datos = query[0]?.dataValues;
   }
   return res.send({
     id: usuario.id,
     correo: usuario.correo,
     role: usuario.role,
+    nombres: datos?.nombres || 'Admin',
+    apellidos: datos?.apellidos || 'Admin',
   });
 };

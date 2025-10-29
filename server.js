@@ -6,11 +6,11 @@ const swaggerUI = require("swagger-ui-express");
 
 const app = express();
 
-// var corsOptions = {
-//   origin: "http://localhost:8081",
-// };
+var corsOptions = {
+  origin: "*",
+};
 
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
