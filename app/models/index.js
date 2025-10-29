@@ -45,4 +45,11 @@ try {
   console.error("❌ Error al cargar modelo 'docente':", err.message);
 }
 
+try {
+  db.carrera = require("./carrera.model.js")(sequelize, Sequelize);
+  console.log("✅ Modelo 'carrera' cargado correctamente.");
+} catch (err) {
+  console.error("❌ Error al cargar modelo 'carrera':", err.message);
+}
+
 module.exports = db;

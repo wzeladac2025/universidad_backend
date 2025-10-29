@@ -23,7 +23,7 @@ db.sequelize.sync();
 
 /**
  * @swagger
- * /: 
+ * /:
  *   get:
  *     summary: Test
  *     tags: [Servicios Up]
@@ -36,23 +36,29 @@ app.get("/", (req, res) => {
   res.json({ message: "UMG Web Universidad" });
 });
 
-try{
+try {
   require("./app/routes/usuario.routes")(app);
   console.log("✅ usuario.routes.js cargado correctamente");
-}catch(err){
+} catch (err) {
   console.error("❌ Error al cargar usuario.routes.js:", err.message);
 }
-try{
+try {
   require("./app/routes/estudiante.routes")(app);
   console.log("✅ estudiante.routes.js cargado correctamente");
-}catch(err){
+} catch (err) {
   console.error("❌ Error al cargar estudiante.routes.js:", err.message);
 }
-try{
+try {
   require("./app/routes/docente.routes")(app);
   console.log("✅ docente.routes.js cargado correctamente");
-}catch(err){
+} catch (err) {
   console.error("❌ Error al cargar docente.routes.js:", err.message);
+}
+try {
+  require("./app/routes/carrera.routes")(app);
+  console.log("✅ carrera.routes.js cargado correctamente");
+} catch (err) {
+  console.error("❌ Error al cargar carrera.routes.js:", err.message);
 }
 
 const PORT = process.env.PORT || 8081;
