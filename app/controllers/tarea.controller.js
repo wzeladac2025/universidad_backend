@@ -47,8 +47,6 @@ exports.create = async (req, res) => {
       nombre: req.body.nombre,
       descripcion: req.body.descripcion,
       fecha_entrega: req.body.fecha_entrega,
-      estado: req.body.estado,
-      direccion_archivo: req.body.direccion_archivo,
       tipo: req.body.tipo,
       punteo: req.body.punteo,
       id_curso: curso.id
@@ -78,6 +76,40 @@ exports.findAll = (req, res) => {
             });
         });
 };
+
+exports.getByCurso = async (req, res) => {
+  try {
+    const id_curso = req.params.id_curso;
+
+    if (!id_curso) {
+      return res.status(400).send({
+        message: "Debe proporcionar un id_curso para la búsqueda.",
+      });
+    }
+
+    // Si id_curso es numérico, se busca directamente por igualdad
+    const tareas = await Tarea.findAll({
+      where: { id_curso: id_curso },
+    });
+
+    if (!tareas || tareas.length === 0) {
+      return res.status(404).send({
+        message: `No se encontraron actividades para el curso con id ${id_curso}`,
+      });
+    }
+
+    // Enviar directamente el arreglo de tareas
+    res.status(200).send(tareas);
+  } catch (err) {
+    console.error("Error al obtener actividades por curso:", err);
+    res.status(500).send({
+      message:
+        err.message || "Error ocurrido al obtener las actividades del curso.",
+    });
+  }
+};
+
+
 
 // Find a single Tutorial with an id
 exports.findOne = async (req, res) => {

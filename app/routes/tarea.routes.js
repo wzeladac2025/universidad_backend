@@ -106,6 +106,60 @@ module.exports = app => {
    */
   router.get("/:id", tarea.findOne);
 
+/**
+ * @swagger
+ * /api/tarea/cursos/{id_curso}:
+ *   get:
+ *     summary: Obtiene todas las tareas asociadas a un curso
+ *     description: Devuelve la lista de actividades (tareas) pertenecientes a un curso específico según su ID.
+ *     tags:
+ *       - Tarea
+ *     parameters:
+ *       - in: path
+ *         name: id_curso
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del curso del cual se desean obtener las tareas
+ *     responses:
+ *       200:
+ *         description: Lista de tareas encontradas para el curso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 12
+ *                   nombre:
+ *                     type: string
+ *                     example: "Tarea 1 - Introducción"
+ *                   descripcion:
+ *                     type: string
+ *                     example: "Actividad de introducción al curso"
+ *                   fecha_entrega:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2025-11-02T23:59:00Z"
+ *                   nota_maxima:
+ *                     type: number
+ *                     example: 100
+ *                   id_curso:
+ *                     type: integer
+ *                     example: 5
+ *       400:
+ *         description: No se proporcionó un id_curso válido
+ *       404:
+ *         description: No se encontraron tareas para el curso especificado
+ *       500:
+ *         description: Error al obtener las tareas del curso
+ */
+router.get("/cursos/:id_curso", tarea.getByCurso);
+
+
   /**
    * @swagger
    * /api/tarea/update/{id}:

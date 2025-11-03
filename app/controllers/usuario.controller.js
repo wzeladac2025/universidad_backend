@@ -1,47 +1,106 @@
-// importamos db los modelos en este caso si tenemos uno o mas, se puede referenciar db."nombreModelo".   
 const db = require("../models");
-const Usuario = db.usuarios;
-const Op = db.Sequelize.Op;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-// Create and Save a new Client
+const Usuario = db.usuarios;
+const Estudiante = db.estudiantes;
+const Docente = db.docentes;
+
 exports.create = async (req, res) => {
-    try{
-    // Validamos que dentro del  request no venga vacio el nombre, de lo contrario returna error
-    if (!req.body.correo || !req.body.contrasena) {
-        res.status(400).send({
-            message: "Necesita ingresar el correo o la contraseña!"
-        });
-        return;
+  try {
+    const { correo, contrasena, role, nombres, apellidos } = req.body;
+
+    if (!correo || !contrasena) {
+      return res.status(400).send({
+        mensaje: "Necesita ingresar el correo y la contraseña.",
+      });
     }
 
-    const hashedPassword = await bcrypt.hash(req.body.contrasena, 10);
+    const hashedPassword = await bcrypt.hash(contrasena, 10);
 
-    // Create a Client, definiendo una variable con la estructura del reques para luego solo ser enviada como parametro mas adelante. 
-    const usuario = {
-        correo: req.body.correo,
-        contrasena: hashedPassword,
-        role: req.body.role || "user",
-        // utilizando ? nos ayuda a indicar que el paramatro puede ser opcional dado que si no viene, le podemos asignar un valor default
-        status: req.body.status ? req.body.status : false
-    };
+    // Crear usuario base
+    const nuevoUsuario = await Usuario.create({
+      correo,
+      contrasena: hashedPassword,
+      role,
+    });
 
-    // Save a new Client into the database
-    Usuario.create(usuario)
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while creating the User."
-            });
-        });
-    } catch(err){
-        res.status(500).send({ message: err.message });
-        console.log("hubo un error inesperado", err.message)
+    // Dependiendo del rol, crear registro en tabla correspondiente
+    if (role === "estudiante") {
+      await Estudiante.create({
+        anio: new Date().getFullYear(),
+        nombre: nombres,
+        apellido: apellidos,
+        id_usuario: nuevoUsuario.id,
+      });
+    } else if (role === "docente") {
+      await Docente.create({
+        nombre: nombres,
+        apellido: apellidos,
+        id_usuario: nuevoUsuario.id,
+      });
     }
+
+    // Enviar una sola respuesta final
+    return res.status(201).send({
+      mensaje: "Usuario creado correctamente",
+      correo: nuevoUsuario.correo,
+    });
+  } catch (err) {
+    console.error("Error al crear usuario:", err);
+    return res.status(500).send({
+      mensaje:
+        err.message || "Error interno al registrar usuario. Consulte al administrador.",
+    });
+  }
+};
+
+exports.findAllDocente = (req, res) => {
+  const correo = req.query.correo;
+
+  // Filtrar solo usuarios con role = "docente"
+  let condition = { role: "docente" };
+
+  // Si se envía un correo como filtro, lo agregamos (iLike para Postgres)
+  if (correo) {
+    condition.correo = { [Op.iLike]: `%${correo}%` };
+  }
+
+  Usuario.findAll({ where: condition })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      console.error("Error findAllDocente:", err);
+      res.status(500).send({
+        message:
+          err.message || "Ocurrió un error al recibir los usuarios docentes.",
+      });
+    });
+};
+
+exports.findAllEstudiante = (req, res) => {
+  const correo = req.query.correo;
+
+  // Filtrar solo usuarios con role = "docente"
+  let condition = { role: "estudiante" };
+
+  // Si se envía un correo como filtro, lo agregamos (iLike para Postgres)
+  if (correo) {
+    condition.correo = { [Op.iLike]: `%${correo}%` };
+  }
+
+  Usuario.findAll({ where: condition })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      console.error("Error findAllDocente:", err);
+      res.status(500).send({
+        message:
+          err.message || "Ocurrió un error al recibir los usuarios docentes.",
+      });
+    });
 };
 
 // Retrieve all Client from the database.
@@ -61,108 +120,86 @@ exports.findAll = (req, res) => {
         });
 };
 
-// Find a single Tutorial with an id
-exports.findOne = async (req, res) => {
-    try {
-        const usuario = await Usuario.findOne({ where: { correo: req.body.correo } });
-        if (!usuario) {
-            return res.status(404).send({ message: "Usuario no encontrado" });
-        }
+exports.login = async (req, res) => {
+  const { correo, contrasena, role } = req.body;
+  try {
+    const query = await db.sequelize.query(
+      'select u.* from "usuarios" u where u."correo" = \'' + correo + "'",
+      {
+        model: Usuario,
+        mapToModel: true,
+      }
+    );
 
-        const validPassword = await bcrypt.compare(req.body.contrasena, usuario.contrasena);
-        if (!validPassword) {
-            return res.status(401).send({ message: "Contraseña incorrecta" });
-        }
-
-        const token = jwt.sign(
-            { id: usuario.id, role: usuario.role },
-            process.env.JWT_SECRET,
-            { expiresIn: "1h" }
-        );
-
-        res.send({ message: "Login exitoso", token });
-    } catch (err) {
-        res.status(500).send({ message: err.message });
+    const usuario = query[0]?.dataValues;
+    if (!usuario) {
+      return res.status(404).send({ mensaje: "Usuario no registrado." });
     }
+
+    if(role != usuario.role){
+      return res.status(404).send({ mensaje: "Tu perfil de usuario no es correcto." });      
+    }
+
+    const validPassword = await bcrypt.compare(contrasena, usuario.contrasena);
+    if (!validPassword) {
+      return res.status(401).send({ mensaje: "Contraseña incorrecta." });
+    }
+
+    const token = jwt.sign(
+      { id: usuario.id, role: usuario.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    return res.send({
+      mensaje: "Sesion Iniciada.",
+      access_token: token,
+      idUsuario: usuario.id,
+    });
+  } catch (err) {
+    return res.status(401).send({ mensaje: err.message });
+  }
 };
 
-// Update a Tutorial by the id in the request
-exports.update = (req, res) => {
-    const id = req.params.id;
-
-    Usuario.update(req.body, {
-        where: { id: id }
+exports.findById = async (req, res) => {
+  const id = req.params.id;
+  const query = await db.sequelize
+    .query('SELECT * FROM "usuarios" u WHERE u."id" = ' + id, {
+      model: Usuario,
+      mapToModel: true,
     })
-        .then(num => {
-            if (num == 1) {
-                res.send({
-                    message: "User was updated successfully."
-                });
-            } else {
-                res.send({
-                    message: `Cannot update User with id=${id}. Maybe User was not found or req.body is empty!`
-                });
-            }
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: "Error updating User with id=" + id
-            });
-        });
-};
+    .catch((err) => {
+      return res.status(500).send({
+        mensaje: err.message || "Error al obtener el usuario.",
+      });
+    });
 
-// Delete a Client with the specified id in the request
-exports.delete = (req, res) => {
-    const id = req.params.id;
-    // utilizamos el metodo destroy para eliminar el objeto mandamos la condicionante where id = parametro que recibimos 
-    Usuario.destroy({
-        where: { id: id }
-    })
-        .then(num => {
-            if (num == 1) {
-                res.send({
-                    message: "User was deleted successfully!"
-                });
-            } else {
-                res.send({
-                    message: `Cannot delete User with id=${id}. El usuario no fue encontado!`
-                });
-            }
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: "Could not delete User with id=" + id
-            });
-        });
-};
+  const usuario = query[0]?.dataValues;
+  if (!usuario) {
+    return res.status(404).send({ mensaje: "Usuario no registrado." });
+  }
 
-// Delete all Clients from the database.
-exports.deleteAll = (req, res) => {
-    Usuario.destroy({
-        where: {},
-        truncate: false
-    })
-        .then(nums => {
-            res.send({ message: `${nums} User were deleted successfully!` });
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while removing all users."
-            });
+  let datos = null;
+  if (usuario.role == "estudiante" || usuario.role == "docente") {
+    let tablaObjeto = usuario.role + "s";
+    const query = await db.sequelize
+      .query('SELECT * FROM "' + tablaObjeto + '" u WHERE u."id_usuario" = ' + id, {
+        model: Usuario,
+        mapToModel: true,
+      })
+      .catch((err) => {
+        return res.status(500).send({
+          mensaje: err.message || "Error al obtener el usuario.",
         });
-};
+      });
 
-// find all active Client, basado en el atributo status vamos a buscar que solo los clientes activos
-exports.findAllStatus = (req, res) => {
-    Usuario.findAll({ where: { status: true } })
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving User."
-            });
-        }); 
+    datos = query[0]?.dataValues;
+  }
+  return res.send({
+    id: usuario.id,
+    correo: usuario.correo,
+    role: usuario.role,
+    nombres: datos?.nombres || 'Admin',
+    apellidos: datos?.apellidos || 'Admin',
+  });
 };

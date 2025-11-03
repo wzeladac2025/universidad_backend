@@ -37,7 +37,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         status_carrera: {
             type: Sequelize.BOOLEAN,
-            defaultValue: false
+            defaultValue: true
             // true: carrera asignada
             // false: sin asignar carrera
         }

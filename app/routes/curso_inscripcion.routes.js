@@ -147,26 +147,123 @@ module.exports = app => {
 
 
     router.post("/siguiente_semestre", curso.obtenerCursosSiguienteSemestre);
-    // Retrieve all Client
+// Retrieve all Inscripciones
 /**
  * @swagger
  * /api/inscripcion:
  *   get:
- *     summary: Obtener todas las inscripcion
+ *     summary: Obtener todas las inscripciones
  *     tags: [inscripcion]
  *     parameters:
  *       - in: query
  *         name: id_curso
  *         schema:
- *           type: string
- *         description: Filtro por id_curso
+ *           type: integer
+ *         required: false
+ *         description: Filtrar las inscripciones por el ID del curso (opcional)
  *     responses:
  *       200:
- *         description: Lista de inscripciones
+ *         description: Lista de inscripciones encontradas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     description: ID de la inscripción
+ *                   estado:
+ *                     type: string
+ *                   fecha_inscripcion:
+ *                     type: string
+ *                     format: date-time
+ *                   curso:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                       id_materia:
+ *                         type: integer
+ *                       periodo:
+ *                         type: string
+ *                   estudiante:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                       carnet:
+ *                         type: string
  *       500:
- *         description: Error al obtener inscripciones
+ *         description: Error interno del servidor
  */
     router.get("/", curso.findAll);
+
+    // Retrieve all cursos de un estudiante por carnet
+/**
+ * @swagger
+ * /api/inscripcion/estudiante/{carnet}:
+ *   get:
+ *     summary: Obtener todos los cursos en los que un estudiante está inscrito
+ *     tags: [inscripcion]
+ *     parameters:
+ *       - in: path
+ *         name: carnet
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Carnet del estudiante (por ejemplo, E2024-001)
+ *     responses:
+ *       200:
+ *         description: Lista de cursos en los que el estudiante está inscrito
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     description: ID de la inscripción
+ *                   estado:
+ *                     type: boolean
+ *                     description: Estado de la inscripción
+ *                   fecha_inscripcion:
+ *                     type: string
+ *                     format: date-time
+ *                     description: Fecha de la inscripción
+ *                   curso:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         description: ID del curso
+ *                       id_materia:
+ *                         type: integer
+ *                         description: ID de la materia asociada
+ *                       periodo:
+ *                         type: string
+ *                         description: Periodo del curso
+ *                   estudiante:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         description: ID del estudiante
+ *                       carnet:
+ *                         type: string
+ *                         description: Carnet del estudiante
+ *       400:
+ *         description: No se proporcionó un carnet válido
+ *       404:
+ *         description: No se encontró el estudiante o no tiene cursos inscritos
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.get("/estudiante/:carnet", curso.findbyEstudiante);
+
     // Retrieve a single Client with id
 /**
  * @swagger

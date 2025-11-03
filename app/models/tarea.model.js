@@ -16,13 +16,6 @@ module.exports = (sequelize, Sequelize) => {
         fecha_entrega: {
             type: Sequelize.DATE
         },
-        estado: {
-            type: Sequelize.ENUM("entregado", "pendiente", "no entregado"),
-            defaultValue: "pendiente"
-        },
-        direccion_archivo: {
-            type: Sequelize.STRING
-        },
         tipo: {
             type: Sequelize.ENUM("tarea", "parcial 1", "parcial 2", "examen final", "proyecto", "asistencia"),
             defaultValue: "tarea"

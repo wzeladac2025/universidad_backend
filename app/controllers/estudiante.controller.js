@@ -1,5 +1,5 @@
 const db = require("../models");
-const Estudiante = db.estudiante;
+const Estudiante = db.estudiantes;
 const sequelize = db.sequelize; 
 const Op = db.Sequelize.Op;
 

@@ -80,6 +80,56 @@ exports.findAll = (req, res) => {
         });
 };
 
+exports.findAllDocente = async (req, res) => {
+  try {
+    const carnet = req.params.carnet;
+
+    // Validar que se haya enviado un carnet
+    if (!carnet || carnet.trim() === "") {
+      return res.status(400).send({ message: "Debe proporcionar un carnet válido." });
+    }
+
+    // Buscar el docente por su carnet
+    const docente = await Docente.findOne({ where: { carnet } });
+    if (!docente) {
+      return res.status(404).send({ message: "No se encontró ningún docente con ese carnet." });
+    }
+
+    // Buscar todos los cursos asociados al docente encontrado
+    const cursos = await Curso.findAll({
+      where: { id_docente: docente.id }, // 👈 asegúrate de usar el campo correcto
+      include: [
+        {
+          model: Materia,
+          attributes: ["id", "nombre"],
+        },
+        {
+          model: Docente,
+          attributes: ["id", "nombre", "apellido", "carnet"],
+        },
+      ],
+      order: [["id", "ASC"]],
+    });
+
+    // Si el docente no tiene cursos asignados
+    if (!cursos || cursos.length === 0) {
+      return res.status(404).send({
+        message: "Este docente no tiene cursos asignados actualmente.",
+      });
+    }
+
+    // Enviar respuesta exitosa
+    res.status(200).send(cursos);
+  } catch (err) {
+    console.error("Error en findAllDocente:", err);
+    res.status(500).send({
+      message:
+        err.message || "Ocurrió un error al obtener los cursos del docente.",
+    });
+  }
+};
+
+
 // Find a single Tutorial with an id
 exports.findOne = async (req, res) => {
   try {

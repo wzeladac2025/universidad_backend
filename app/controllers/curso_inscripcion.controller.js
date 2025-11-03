@@ -233,36 +233,48 @@ exports.obtenerCursosSiguienteSemestre = async (req, res) => {
   }
 };
 
-
 exports.findAll = async (req, res) => {
   try {
-    const id_curso = req.query?.id_curso;
+    const { id_curso } = req.query;
     const where = {};
 
-    if (id_curso !== undefined) {
+    // Si se envía un id_curso, filtramos
+    if (id_curso) {
       const idParsed = Number(id_curso);
       if (Number.isNaN(idParsed)) {
-        return res
-          .status(400)
-          .send({ message: "id_curso debe ser numérico." });
+        return res.status(400).json({ message: "El parámetro id_curso debe ser numérico." });
       }
       where.id_curso = idParsed;
     }
 
-    const data = await Curso_Inscripcion.findByPk(id, {
+    // 🔹 Buscar todas las inscripciones (o filtradas)
+    const inscripciones = await Curso_Inscripcion.findAll({
+      where,
       include: [
         { model: Curso, as: "curso", attributes: ["id", "id_materia", "periodo"] },
         { model: Estudiante, as: "estudiante", attributes: ["id", "carnet"] },
       ],
+      order: [["id", "ASC"]],
     });
 
-    return res.send(data);
+    if (!inscripciones.length) {
+      return res.status(200).json({
+        message: "No se encontraron inscripciones.",
+        data: [],
+      });
+    }
+
+    return res.status(200).json(inscripciones);
   } catch (err) {
-    return res.status(500).send({
-      message: err.message || "Hubo un error al buscar las inscripciones.",
+    console.error("[findAll] Error al obtener inscripciones:", err);
+    return res.status(500).json({
+      message: "Error al obtener las inscripciones.",
+      error: err.message,
     });
   }
 };
+
+
 
 
 exports.findOne = async (req, res) => {
@@ -291,6 +303,31 @@ exports.findOne = async (req, res) => {
   }
 };
 
+exports.findbyEstudiante = async (req, res) => {
+  try {
+    const id = req.params?.carnet;
+    if (!carnet) {
+      return res
+        .status(400)
+        .send({ message: "Debe incluir el carnet del estudiante a buscar." });
+    }
+
+    const row = await Curso_Inscripcion.findByPk(id, {
+      include: [
+        { model: Curso, as: "curso", attributes: ["id", "id_materia", "periodo"] },
+        { model: Estudiante, as: "estudiante", attributes: ["id", "carnet"] },
+      ],
+    });
+
+    if (!row) {
+      return res.status(404).send({ message: "Inscripción a curso no encontrada." });
+    }
+
+    return res.send(row);
+  } catch (err) {
+    return res.status(500).send({ message: err.message });
+  }
+};
 
 exports.update = async (req, res) => {
   try {

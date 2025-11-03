@@ -20,6 +20,7 @@ exports.create = async (req, res) => {
             genero: req.body.genero,
             sueldo: req.body.sueldo,
             id_usuario: req.body.id_usuario,
+            id_carrera: req.body.id_carrera,
             status: req.body.status ? req.body.status : false
         });
 

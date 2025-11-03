@@ -14,6 +14,10 @@ module.exports = (sequelize, Sequelize) => {
             punteo: {
             type: Sequelize.INTEGER
         },
+            estado: {
+            type: Sequelize.ENUM("entregado", "no entregado", "pendiente"),
+            defaultValue: "no entregado"
+        },
             id_tarea: {
             type: Sequelize.INTEGER
         },

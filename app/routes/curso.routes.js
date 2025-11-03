@@ -67,6 +67,88 @@ module.exports = app => {
  *         description: Error al obtener los cursos
  */
     router.get("/", curso.findAll);
+/**
+ * @swagger
+ * /api/curso/docentes/{carnet}:
+ *   get:
+ *     summary: Obtiene todos los cursos asignados a un docente por su carnet
+ *     description: Retorna la lista de cursos pertenecientes a un docente específico, filtrando por su carnet.
+ *     tags:
+ *       - Curso
+ *     parameters:
+ *       - in: path
+ *         name: carnet
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Carnet del docente cuyos cursos se desean obtener
+ *         example: "D2023-15"
+ *     responses:
+ *       200:
+ *         description: Lista de cursos asignados al docente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   periodo:
+ *                     type: string
+ *                     example: "2025-A"
+ *                   seccion:
+ *                     type: string
+ *                     example: "A"
+ *                   cupo:
+ *                     type: integer
+ *                     example: 40
+ *                   id_materia:
+ *                     type: integer
+ *                     example: 3
+ *                   id_carrera:
+ *                     type: integer
+ *                     example: 2
+ *                   id_docente:
+ *                     type: integer
+ *                     example: 5
+ *                   materia:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 3
+ *                       nombre:
+ *                         type: string
+ *                         example: "Programación II"
+ *                   docente:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 5
+ *                       nombre:
+ *                         type: string
+ *                         example: "Carlos"
+ *                       apellido:
+ *                         type: string
+ *                         example: "García"
+ *                       carnet:
+ *                         type: string
+ *                         example: "D2023-15"
+ *       400:
+ *         description: No se proporcionó el carnet del docente
+ *       404:
+ *         description: No se encontraron cursos para el docente o el docente no existe
+ *       500:
+ *         description: Error del servidor al obtener los cursos
+ */
+
+router.get("/docentes/:carnet", curso.findAllDocente);
+
+
     // Retrieve all published Clients
 /**
  * @swagger

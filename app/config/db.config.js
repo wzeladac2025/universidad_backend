@@ -1,10 +1,16 @@
 module.exports = {
-  HOST: "localhost",  //206.189.193.115
-  USER: "universidad",
-  PASSWORD: "rootadmin",
-  DB: "XEPDB1",
-  dialect: "oracle",
-  port: 1521,
+  HOST: "ep-steep-leaf-af1ypkm4-pooler.c-2.us-west-2.aws.neon.tech",
+  USER: "neondb_owner",
+  PASSWORD: "npg_zxUOdr10ofFn",
+  DB: "neondb",
+  dialect: "postgres",
+  port: 5432,
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false, // necesario para Neon
+    },
+  },
   pool: {
     max: 5,
     min: 0,

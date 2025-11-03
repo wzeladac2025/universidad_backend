@@ -35,7 +35,7 @@ module.exports = (app) => {
    *       400:
    *         description: Error al crear estudiante
    */
-  router.post("/create/", estudiante.create);
+  router.post("/create", estudiante.create);
 
   //Obtener todos los estudiantes
   /**

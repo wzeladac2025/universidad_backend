@@ -36,6 +36,7 @@ exports.create = async (req, res) => {
 
     const tarea = await Tarea_Estudiante.create({
       direccion_archivo: req.body.direccion_archivo,
+      estado: req.body.estado,
       id_tarea: req.body.id_tarea,
       id_estudiante: estudiante.id
     });
@@ -80,6 +81,58 @@ exports.findOne = async (req, res) => {
     } catch (err) {
         res.status(500).send({ message: err.message });
     }
+};
+
+exports.findByCarnetAndTarea = async (req, res) => {
+  try {
+    const { carnet_estudiante, id_tarea } = req.params;
+
+    // Validar parámetros obligatorios
+    if (!carnet_estudiante || !id_tarea) {
+      return res.status(400).send({
+        message: "Debe proporcionar carnet_estudiante y id_tarea.",
+      });
+    }
+
+    // Buscar estudiante por carnet
+    const estudiante = await Estudiante.findOne({
+      where: { carnet: carnet_estudiante },
+      attributes: ["id", "carnet"],
+    });
+
+    if (!estudiante) {
+      return res.status(404).send({
+        message: "Estudiante no encontrado.",
+        carnet_estudiante,
+      });
+    }
+
+    // Buscar tarea del estudiante
+    const tarea_estudiante = await Tarea_Estudiante.findOne({
+      where: {
+        id_estudiante: estudiante.id,
+        id_tarea: id_tarea,
+      },
+    });
+
+    if (!tarea_estudiante) {
+      return res.status(404).send({
+        message: "No se encontró la tarea asignada a este estudiante.",
+        details: { carnet_estudiante, id_tarea },
+      });
+    }
+
+    // Si todo bien
+    return res.status(200).send({
+      message: "Tarea encontrada.",
+      data: tarea_estudiante,
+    });
+  } catch (err) {
+    console.error("[findByCarnetAndTarea] Error:", err);
+    return res.status(500).send({
+      message: err.message || "Error al buscar la tarea del estudiante.",
+    });
+  }
 };
 
 // Update a Tutorial by the id in the request
