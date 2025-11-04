@@ -8,11 +8,15 @@ const app = express();
 
 var corsOptions = {
   origin: [
-    "https://universidad-frontend-1.onrender.com",
+    "https://universidad-frontend-1.onrender.com", // tu frontend en producción
+    "http://localhost:5173",                       // opcional: para desarrollo local
   ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 };
+app.use(cors(corsOptions));
+
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
