@@ -7,7 +7,11 @@ const swaggerUI = require("swagger-ui-express");
 const app = express();
 
 var corsOptions = {
-  origin: "*",
+  origin: [
+    "https://universidad-frontend-1.onrender.com",
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
